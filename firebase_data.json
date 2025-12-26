@@ -1,0 +1,1516 @@
+{
+    "courses": [
+        {
+            "id": "becaflix",
+            "title": "Curso de Canto BECAFLIX",
+            "imageUrl": "https://drive.google.com/thumbnail?id=12a-aRJHtNA6aYVqh82IpQV7SelEvO363&sz=w1000",
+            "modules": [
+                {
+                    "id": "beca-mod-00",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-00-01",
+                            "title": "1. Boas Vindas",
+                            "videoUrl": "https://drive.google.com/file/d/1SIM53f_8pz8uCD_E3kW1QA5-MhCT4fmq/view"
+                        },
+                        {
+                            "id": "beca-lesson-00-02",
+                            "title": "2. O que você vai aprender",
+                            "videoUrl": "https://drive.google.com/file/d/1eVfjpQvSKaHVkibxHF78BkcDSWooOYeA/view"
+                        },
+                        {
+                            "id": "beca-lesson-00-03",
+                            "title": "3. Orientações importantes",
+                            "videoUrl": "https://drive.google.com/file/d/1KgZps8eJCxLFwRRnFrA8M1ohTZ1mQL1F/view"
+                        }
+                    ],
+                    "title": "Módulo 0 - Comece por aqui"
+                },
+                {
+                    "id": "beca-mod-01",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-01-01",
+                            "title": "1. Saiba o que está fazendo",
+                            "videoUrl": "https://drive.google.com/file/d/1tjMxhgSaAO1TIIPQqaeWS98HdCAEEgya/view"
+                        },
+                        {
+                            "id": "beca-lesson-01-02",
+                            "title": "2. Conceitos Básicos",
+                            "videoUrl": "https://drive.google.com/file/d/1nTVFZYJa-2lDqHjl6rWwQxjI5p3YNKSW/view"
+                        },
+                        {
+                            "id": "beca-lesson-01-03",
+                            "title": "3. Controles Vocais",
+                            "videoUrl": "https://drive.google.com/file/d/1pK2GY6jKp6ITl2QNGvw_6Xxr_EFw33ND/view"
+                        },
+                        {
+                            "id": "beca-lesson-01-04",
+                            "title": "4. Fisiologia da voz",
+                            "videoUrl": "https://drive.google.com/file/d/1T4e6xcv_LMhVHFccJGgTh3qzwKBAdG38/view"
+                        },
+                        {
+                            "id": "beca-lesson-01-05",
+                            "title": "5. Como lidar com o emocional",
+                            "videoUrl": "https://drive.google.com/file/d/13MbBZK56GWXenbFx_9O8oSGtARy3CfNH/view"
+                        }
+                    ],
+                    "title": "Módulo 1 - Introdução ao canto"
+                },
+                {
+                    "id": "beca-mod-02",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-02-01",
+                            "title": "1. Desafios do cantor cristão",
+                            "videoUrl": "https://drive.google.com/file/d/1rnAe0yedvR-SfqW6RMhdlcae20xdFS-E/view"
+                        },
+                        {
+                            "id": "beca-lesson-02-02",
+                            "title": "2. Estudo e constância",
+                            "videoUrl": "https://drive.google.com/file/d/1GvT_9YdqiOUiLYybkq-zFx2TfFfrlwD0/view"
+                        },
+                        {
+                            "id": "beca-lesson-02-03",
+                            "title": "3. Inimigos do cantor",
+                            "videoUrl": "https://drive.google.com/file/d/1yNERM449T_zr7HDX-aCHwOy-QJrIBlqL/view"
+                        },
+                        {
+                            "id": "beca-lesson-02-04",
+                            "title": "4. Referências e repertório",
+                            "videoUrl": "https://drive.google.com/file/d/1j7nfvCw_doKBcoE2_GPdngQYwhBItr8f/view"
+                        },
+                        {
+                            "id": "beca-lesson-02-05",
+                            "title": "5. Tipos de Cantor",
+                            "videoUrl": "https://drive.google.com/file/d/1_stR-UpJpit_uBryiZllg7yf2EtN-nkv/view"
+                        }
+                    ],
+                    "title": "Módulo 2 - Desafios do cantor"
+                },
+                {
+                    "id": "beca-mod-03",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-03-01",
+                            "title": "1. Respiração O que é",
+                            "videoUrl": "https://drive.google.com/file/d/12sc-zsYhJmvz_aRjTHuTx0H2dvFIY3Qw/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-02",
+                            "title": "2. Como sei que estou apoiando certo",
+                            "videoUrl": "https://drive.google.com/file/d/1kjyJjS5Ldl1cgbhxqW4L8eG46b4l4JXW/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-03",
+                            "title": "3. Mapeamento vocal",
+                            "videoUrl": "https://drive.google.com/file/d/168dqcy8YRGkOnqf-YoQJyIj9NwxvC8x7/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-04",
+                            "title": "4. Com muito louvor respiração",
+                            "videoUrl": "https://drive.google.com/file/d/1a5q9wZAF1IEJbJpMNfKlOL-06iZjXJmg/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-05",
+                            "title": "5. Exercício de respiração e sustentação",
+                            "videoUrl": "https://drive.google.com/file/d/1hxsXCXKiKLX5RjTp8Y0nRBsSS1iQ_Ox7/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-06",
+                            "title": "6. Exercício de respiração stacatto",
+                            "videoUrl": "https://drive.google.com/file/d/1oIJ4rEx2vvH6IKXDSGt_-D-NbaSzI2qp/view"
+                        }
+                    ],
+                    "title": "Módulo 3 - Respiração no Canto"
+                },
+                {
+                    "id": "beca-mod-04",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-04-01",
+                            "title": "1. Voz Saudável e Profissionais da Voz",
+                            "videoUrl": "https://drive.google.com/file/d/17Fdfa6BQodk4a2m3wp2Ey3dsym0LgG4_/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-02",
+                            "title": "2. Cuidados Vocais",
+                            "videoUrl": "https://drive.google.com/file/d/14lcYZ41NSIXMivbGjigeopgAcD5umlvJ/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-03",
+                            "title": "3. Aquecimento e Desaquecimento",
+                            "videoUrl": "https://drive.google.com/file/d/11Dg0dJcY3f_MaIgqm1yrJYjRrn2bzI9O/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-04",
+                            "title": "4. Aquecimento 4 Hamming",
+                            "videoUrl": "https://drive.google.com/file/d/1bBbvyKi0I3bcdCx5N0sY58bu5R92x1Nn/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-05",
+                            "title": "4. Cuidados vocais protocolo básico",
+                            "videoUrl": "https://drive.google.com/file/d/1tLuHaYV__fYl15YadyJ5JMY3TC1s3FO2/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-06",
+                            "title": "5. Aquecimento - Bocca Chiusa",
+                            "videoUrl": "https://drive.google.com/file/d/1kSatBJOlbSwPBqKs_5PPlboCDiEX9TuL/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-07",
+                            "title": "6. Alongamento e Relaxamento corporal",
+                            "videoUrl": "https://drive.google.com/file/d/1dM-pUHhVvolFAnCwmZTVpoCQsmvvUvHW/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-08",
+                            "title": "7. Aquecimento PA PE PI",
+                            "videoUrl": "https://drive.google.com/file/d/1c1dogn5I05UIiSiR6cPkz3XYOsTv--Oa/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-09",
+                            "title": "8. Aquecimentp NHÉM NHÉM",
+                            "videoUrl": "https://drive.google.com/file/d/1qKZJaZdx3azOBDB7CHpBNDZHyJgiVZKh/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-10",
+                            "title": "9. Desaquecimento introdução",
+                            "videoUrl": "https://drive.google.com/file/d/1FeT96l6t-wz2oEfDP_YMQy1qWSg6NBaC/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-11",
+                            "title": "10. Desaquecimento Hamming",
+                            "videoUrl": "https://drive.google.com/file/d/15_DLfp_--pCu1NJ7zRkLgLQwv8OGJNqI/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-12",
+                            "title": "11. Desaquecimento 2 TR ou BR",
+                            "videoUrl": "https://drive.google.com/file/d/1fupzhzCVsDxCvuJJifFVDv2qYA7tcqvY/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-13",
+                            "title": "12. Exercício mão espalmada",
+                            "videoUrl": "https://drive.google.com/file/d/1WkK_ttb_0hjrPm4-vAZZmNPCrz9LhH9v/view"
+                        }
+                    ],
+                    "title": "Módulo 4 - Cuidando da Voz"
+                },
+                {
+                    "id": "beca-mod-05",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-05-01",
+                            "title": "1. Cantando somente a melodia",
+                            "videoUrl": "https://drive.google.com/file/d/1QWK44EHAHjOulo4etMpzR1YvVTZsASjj/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-02",
+                            "title": "2. Dicas de aplicativos de percepção",
+                            "videoUrl": "https://drive.google.com/file/d/1ksNeb6kgetE_SQs_JaRud7ZqivNc8CoD/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-03",
+                            "title": "3. Escala cromática",
+                            "videoUrl": "https://drive.google.com/file/d/1rfKLvnlqumZm3vQUf6BSsU7MZbprxtRs/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-04",
+                            "title": "4. Escala de dó maior",
+                            "videoUrl": "https://drive.google.com/file/d/1TwPsgwR9nDHJgO_dUGsCvAwmkswSQO0z/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-05",
+                            "title": "5. Exercício de notas graves",
+                            "videoUrl": "https://drive.google.com/file/d/1JgrGWbd8bl84VP59-NymuQYmndd40v3G/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-06",
+                            "title": "6. Exercício de percepção 1",
+                            "videoUrl": "https://drive.google.com/file/d/1Kqho4pY5Sho0IEeVIw9HwdisPPoVniG4/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-07",
+                            "title": "7. Exercício de troca de registro vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1SI9A63UGCe8ifjisBJFWnvS-DVa329jc/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-08",
+                            "title": "8. Exencício de percepção",
+                            "videoUrl": "https://drive.google.com/file/d/1AaXWYKG34uMy8RpA0bzQLQUr6796LvNU/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-09",
+                            "title": "9. Exercício de troca de registro",
+                            "videoUrl": "https://drive.google.com/file/d/1egstY8wd-6ZycO7yKVed35toL2DA86VC/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-10",
+                            "title": "10. Exercício de notas agúdas",
+                            "videoUrl": "https://drive.google.com/file/d/1jmqzIy_r-jpzV6cs-ANiu49mpxhLvPJJ/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-11",
+                            "title": "11. Firmamento gótico",
+                            "videoUrl": "https://drive.google.com/file/d/1S6bm1GIJ9NAlhiPuP1EBRD30IpkTZmOs/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-12",
+                            "title": "12. Mostrar notas graves médias e agudas",
+                            "videoUrl": "https://drive.google.com/file/d/1Vi2AWYKb8tg2gsONvUOZjfR5PSuMRamn/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-13",
+                            "title": "13. O que é afinação",
+                            "videoUrl": "https://drive.google.com/file/d/1DqT79nUMV3KTxXH3Mi1EQMcm1qlqocs0/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-14",
+                            "title": "14. O que Tua Glória fez comigo afinação",
+                            "videoUrl": "https://drive.google.com/file/d/1JyenRRaYrVpgG31cvnyL-JuOdh8HOBlW/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-15",
+                            "title": "15. Tutorial voice trainning",
+                            "videoUrl": "https://drive.google.com/file/d/1NHLf7AUXsXrlZZny8juh0YVcGH06KZem/view"
+                        }
+                    ],
+                    "title": "Módulo 5 - Afinação e Percepção"
+                },
+                {
+                    "id": "beca-mod-06",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-06-01",
+                            "title": "1. Aplicação prática ritmo",
+                            "videoUrl": "https://drive.google.com/file/d/1B08IGTccGKxPLjLQLGOA9h0ojGEcq7FY/view"
+                        },
+                        {
+                            "id": "beca-lesson-06-02",
+                            "title": "2. Cantando a rítmica",
+                            "videoUrl": "https://drive.google.com/file/d/1za0VUJVoE739z0wqsnfZ4hLHeOnEozaX/view"
+                        },
+                        {
+                            "id": "beca-lesson-06-03",
+                            "title": "3. Entendendo a duração das notas",
+                            "videoUrl": "https://drive.google.com/file/d/1J3t5tLkZdWSJouceW5b88vpHVeMUm5cy/view"
+                        },
+                        {
+                            "id": "beca-lesson-06-04",
+                            "title": "4. Exercício de pulsação",
+                            "videoUrl": "https://drive.google.com/file/d/11_wO9y70NUdXWLYuxprHS30pEVkTpBhD/view"
+                        },
+                        {
+                            "id": "beca-lesson-06-05",
+                            "title": "5. O que rítmica",
+                            "videoUrl": "https://drive.google.com/file/d/1SAlNpR_FCXBlqpwl34UrHy-xaxU_rlvM/view"
+                        }
+                    ],
+                    "title": "Módulo 6 - Cantar no ritmo"
+                },
+                {
+                    "id": "beca-mod-07",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-07-01",
+                            "title": "1. O que é articulação - levantamento palato mole",
+                            "videoUrl": "https://drive.google.com/file/d/1ysmSWClqg0PaKKu_IxF48blI8uumx_Lq/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-02",
+                            "title": "2. Exercício de articulação e projeção",
+                            "videoUrl": "https://drive.google.com/file/d/1IBxuMAVlGSNi_AznQNNlU9UZF43O8X0W/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-03",
+                            "title": "3. Exercício de língua",
+                            "videoUrl": "https://drive.google.com/file/d/1LvOwhYo2bOO0aO3sxp93NxVDKFs42H7l/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-04",
+                            "title": "4. Exercício de projeção chamando alguém",
+                            "videoUrl": "https://drive.google.com/file/d/1NOWCG2keSF2mrGHNSRkdhowyK0XaHRn7/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-05",
+                            "title": "5 e 6. Trava línguas",
+                            "videoUrl": "https://drive.google.com/file/d/18qKaTyRM75pNAMRUXzMQFbm1-NTlCMMn/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-06",
+                            "title": "7. Exercício PA TA CA",
+                            "videoUrl": "https://drive.google.com/file/d/1j7Za1IvgdNH-iznIgiVUo3-pTMLdJRbn/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-07",
+                            "title": "8. Manipulação do fonêma",
+                            "videoUrl": "https://drive.google.com/file/d/1cNHOX-VVa7jjEux1miLwzhkiIOCe-bl5/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-08",
+                            "title": "9. Potência e projeção vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1mg7a-i5sj6ERdAHo_pUef8m9LA2qz2t8/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-09",
+                            "title": "10. Prática projeção alem do rio azul",
+                            "videoUrl": "https://drive.google.com/file/d/13tx79PSq2iSY6-q7bLvul8cQ5zzsu1rl/view"
+                        }
+                    ],
+                    "title": "Módulo 7 - Articulação"
+                },
+                {
+                    "id": "beca-mod-08",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-08-01",
+                            "title": "1. Aplicação prática belting",
+                            "videoUrl": "https://drive.google.com/file/d/1R-3Goor2V1gC43e0H7D-RLpWdvmzuoHC/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-02",
+                            "title": "2. Aplicação prática drives vocais",
+                            "videoUrl": "https://drive.google.com/file/d/1q8aS3QKMAxIaEhuqKBjuR6-Mfnvepdco/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-03",
+                            "title": "3. Aplicação pratica melisma",
+                            "videoUrl": "https://drive.google.com/file/d/13wbk-xADd2oFikumOAtXcLt-Wkb5MZ44/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-04",
+                            "title": "4. Aplicação pratica yodel",
+                            "videoUrl": "https://drive.google.com/file/d/1OgoOVPI6VgdJEqWba7dRJtRbVAGwmo8G/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-05",
+                            "title": "5. apogiatura",
+                            "videoUrl": "https://drive.google.com/file/d/15cM2vt5k2_gpbZecKFFGX4PvcOXXQAsq/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-06",
+                            "title": "6. Exercicio Belting part 1",
+                            "videoUrl": "https://drive.google.com/file/d/1hwTq1txQfbVxnRo8wNlEe07P-aCWF106/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-07",
+                            "title": "7. Exercício Belting part 2",
+                            "videoUrl": "https://drive.google.com/file/d/15FFniidDuXC5nyROeZpRFuv7Wmle_f4d/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-08",
+                            "title": "8. Exercicios melisma agilidade",
+                            "videoUrl": "https://drive.google.com/file/d/1XWu1JmzTjEAKqjDROZBcQtcC2Npb2XTx/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-09",
+                            "title": "9. Melisma Intro",
+                            "videoUrl": "https://drive.google.com/file/d/1IYKzJIs_-bnpweRgqbnI4BoqBZ8L599g/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-10",
+                            "title": "10. Melisma part 2",
+                            "videoUrl": "https://drive.google.com/file/d/13ju1ZJSYGUF8S0W3LGBkEwuOoiB4TF3F/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-11",
+                            "title": "11. Melisma part 3 prática conceitual",
+                            "videoUrl": "https://drive.google.com/file/d/1pEs-qKDf2UED6V0IJYckKc87sWNpE_bT/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-12",
+                            "title": "12. Ornamentos e vicios vocais",
+                            "videoUrl": "https://drive.google.com/file/d/1ZznqYpMX-xxAvpGkh6qctSiWoDtor_Fz/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-13",
+                            "title": "13. Timbragem vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1l9ERoK7_FgBWjrIU0t_pgLBeIr2ZCj9S/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-14",
+                            "title": "14. Timbre",
+                            "videoUrl": "https://drive.google.com/file/d/1UgEzBrMyRghgZ-x1HjWYj_sA_zLTCV3z/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-15",
+                            "title": "15. Trinado pratica",
+                            "videoUrl": "https://drive.google.com/file/d/1XCYkPzAeD0-E0yztuIZcVju9ektOFSBh/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-16",
+                            "title": "16. Trinado",
+                            "videoUrl": "https://drive.google.com/file/d/1db-T5q3XhMF36OMY6zwg7qf1NLgzUFe7/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-17",
+                            "title": "17. Vibrato prática",
+                            "videoUrl": "https://drive.google.com/file/d/13dMtZK8XBYI7yY0Enwc9Iumct0pC4VOZ/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-18",
+                            "title": "18. Vibrato",
+                            "videoUrl": "https://drive.google.com/file/d/1T6sC5Zj8vs_H00X8O_gpzSfnKgApnxza/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-19",
+                            "title": "19. Vocal fry pratica",
+                            "videoUrl": "https://drive.google.com/file/d/1kJOzmbmlYGYYJcIRyUetGgkgJ-WCXiDL/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-20",
+                            "title": "20. Vocal Fry",
+                            "videoUrl": "https://drive.google.com/file/d/1gBjY9KuSKi1PO_xtFwh5WdPAUMslz2eT/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-21",
+                            "title": "21. Yodel",
+                            "videoUrl": "https://drive.google.com/file/d/13bNvC_yDklnxGdXlh8sb3bYN49vJol1e/view"
+                        }
+                    ],
+                    "title": "Módulo 8 - Efeitos vocais"
+                },
+                {
+                    "id": "beca-mod-09",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-09-01",
+                            "title": "1. Exercicio imrprovisação vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1lnxhKLBpxPzm2Kc58HLDeDBUgw37U4hS/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-02",
+                            "title": "2. Expressão vocal e corporal",
+                            "videoUrl": "https://drive.google.com/file/d/18pca_-V6r0-m7kICSLDhXqQV-P0UzBoY/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-03",
+                            "title": "3. Improvisação vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1cAyFdALiGpX8mzhS2AkScbAX76jq9jvF/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-04",
+                            "title": "4. Interpretação musical part 1 e 2",
+                            "videoUrl": "https://drive.google.com/file/d/1xB0BAs8jlLjIMp-VsnCOMlN4ScwSVUoQ/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-05",
+                            "title": "5. Postura e posicionamento de palco",
+                            "videoUrl": "https://drive.google.com/file/d/1ZSC4yGwrPArV-u8_8EyHy6Qn5cFHZZGq/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-06",
+                            "title": "6. Tecnica de backing vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1RmRe8Aq_g794uYDgf_gw4_wsmb0Lsut5/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-07",
+                            "title": "7. Uso do microfone",
+                            "videoUrl": "https://drive.google.com/file/d/1eCF5CxJRpBUN3N9RIUawB9kUWBxWHKSz/view"
+                        }
+                    ],
+                    "title": "Módulo 9 - Melhorando a performance"
+                },
+                {
+                    "id": "beca-mod-10",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-10-01",
+                            "title": "1. Introdução",
+                            "videoUrl": "https://drive.google.com/file/d/1WOrifCP8eZUuSWOQb_W49zPBQaYSHSrE/view"
+                        },
+                        {
+                            "id": "beca-lesson-10-02",
+                            "title": "2. Tipos de microfones",
+                            "videoUrl": "https://drive.google.com/file/d/1kjgq_zdRTWVyDYlMuek3iQRJ0MSyTN6n/view"
+                        }
+                    ],
+                    "title": "Módulo 10 - Equalização de microfone"
+                }
+            ]
+        },
+        {
+            "id": "treinamento-vai-na-biblia",
+            "title": "Treinamento Vai Na Bíblia",
+            "imageUrl": "/assets/course-covers/vnb.png",
+            "modules": [
+                {
+                    "id": "vnb-mod-01",
+                    "title": "01 PREPARAÇÃO",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-01-01",
+                            "title": "01 Boas-Vindas",
+                            "videoUrl": "https://drive.google.com/file/d/1_JamzcmX-SrKmjP4co0LHO7K8eiJHNpf/view"
+                        },
+                        {
+                            "id": "vnb-lesson-01-02",
+                            "title": "02 O preço do Chamado",
+                            "videoUrl": "https://drive.google.com/file/d/1wyz5WgmMnEXiHjYIqJeN6Zsk3UH3anDp/view"
+                        },
+                        {
+                            "id": "vnb-lesson-01-03",
+                            "title": "03 As Fontes de Autoridade",
+                            "videoUrl": "https://drive.google.com/file/d/1dnMmA-iLhLcqxv10VXSsRvPvZfrw_T4_/view"
+                        },
+                        {
+                            "id": "vnb-lesson-01-04",
+                            "title": "04 A importância do conhecimento",
+                            "videoUrl": "https://drive.google.com/file/d/1JbEbqvLYuqW_IaMeGGssPgloAL9CmyKr/view"
+                        },
+                        {
+                            "id": "vnb-lesson-01-05",
+                            "title": "05 A organização do conteúdo",
+                            "videoUrl": "https://drive.google.com/file/d/1y4qFU9encTLZL6AxBBrSyoai94VW1a0J/view"
+                        },
+                        {
+                            "id": "vnb-lesson-01-06",
+                            "title": "06 A construção do aprendizado",
+                            "videoUrl": "https://drive.google.com/file/d/1GJVtlNV2GrB6S2bKxAfg6eT93q5lWGxs/view"
+                        },
+                        {
+                            "id": "vnb-lesson-01-07",
+                            "title": "07 As doutrinas fundamentais",
+                            "videoUrl": "https://drive.google.com/file/d/1yx0LA8WophoRt9AX_2riB9zasJQ5doBp/view"
+                        },
+                        {
+                            "id": "vnb-lesson-01-08",
+                            "title": "08 Comunidade, recursos e reconhecimento",
+                            "videoUrl": "https://drive.google.com/file/d/147H3ukEOdyMF4e1LeX6RD7Lp9B6Dts-P/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-02",
+                    "title": "02 BÍBLIA - Conhecendo a Bíblia",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-02-01",
+                            "title": "01 Inpiração e Estrutura",
+                            "videoUrl": "https://drive.google.com/file/d/1lucJTQZGLClOX9WG80toebeuoTr0sMH_/view"
+                        },
+                        {
+                            "id": "vnb-lesson-02-02",
+                            "title": "02 O Antigo Testamento",
+                            "videoUrl": "https://drive.google.com/file/d/1ZBPExIxM4zs3vGUsCPVR-fXDFvFWh5OI/view"
+                        },
+                        {
+                            "id": "vnb-lesson-02-03",
+                            "title": "03 A formação da Bíblia",
+                            "videoUrl": "https://drive.google.com/file/d/1o-6nzj-XIKzEhyW-UepPIRSfI_8cGumf/view"
+                        },
+                        {
+                            "id": "vnb-lesson-02-04",
+                            "title": "04 O Novo Tetamento",
+                            "videoUrl": "https://drive.google.com/file/d/1BG9gdhXF8061qpbeRhD-kqr9WkYxnlvr/view"
+                        },
+                        {
+                            "id": "vnb-lesson-02-05",
+                            "title": "05 Como ler a Bíblia",
+                            "videoUrl": "https://drive.google.com/file/d/1NcwL9h6fV6cDuRZI-s4dZ_8-tZmnit7-/view"
+                        },
+                        {
+                            "id": "vnb-lesson-02-06",
+                            "title": "06 Como estudar a Bíblia",
+                            "videoUrl": "https://drive.google.com/file/d/1LS0l5KDSBUaGv8pJaHSffBFq5CuqrQKV/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-03",
+                    "title": "03 SALVAÇÃO - O Plano de Salvação",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-03-01",
+                            "title": "01 O destino Eterno",
+                            "videoUrl": "https://drive.google.com/file/d/1cpzrw-3wvH_eYvsy0cNVU8YyNAsRRVzn/view"
+                        },
+                        {
+                            "id": "vnb-lesson-03-02",
+                            "title": "02 A separação de Deus",
+                            "videoUrl": "https://drive.google.com/file/d/1F1VzycSsf7qY1bJrb6YmKJxIm0MSxiEj/view"
+                        },
+                        {
+                            "id": "vnb-lesson-03-03",
+                            "title": "03 A nossa Corrupção",
+                            "videoUrl": "https://drive.google.com/file/d/1eTq9RTPwF_Imp_ATKh8yKhtDYEzN2Wur/view"
+                        },
+                        {
+                            "id": "vnb-lesson-03-04",
+                            "title": "04 A provisão Divina",
+                            "videoUrl": "https://drive.google.com/file/d/1m5sR8si65wm01vWbnnh8v-KRoRY_Vko7/view"
+                        },
+                        {
+                            "id": "vnb-lesson-03-05",
+                            "title": "05 A nossa Salvação",
+                            "videoUrl": "https://drive.google.com/file/d/1SqePdR2RQKanCuSgEn4Qa73ZBzQ7jSDj/view"
+                        },
+                        {
+                            "id": "vnb-lesson-03-06",
+                            "title": "06 A Vida Eterna em Cristo",
+                            "videoUrl": "https://drive.google.com/file/d/1rdcQA_QZztgLzqU5W3xjzG4PkEI8MUV8/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-04",
+                    "title": "04 PERDÃO - O Processo do Perdão",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-04-01",
+                            "title": "01 Reconhecer Nossa Maldade",
+                            "videoUrl": "https://drive.google.com/file/d/1Gf8XipckWJ1KRuugV8hcYpM_trtiEYh-/view"
+                        },
+                        {
+                            "id": "vnb-lesson-04-02",
+                            "title": "02 Ser Perdoado Por Deus",
+                            "videoUrl": "https://drive.google.com/file/d/1cCzkw-dmwLEUCyYf_OJUPVdrYaNJprMz/view"
+                        },
+                        {
+                            "id": "vnb-lesson-04-03",
+                            "title": "03 Perdoar a Si Mesmo",
+                            "videoUrl": "https://drive.google.com/file/d/18LmmviTD9vJ2stdtVDI_aDeOxEMdfBgV/view"
+                        },
+                        {
+                            "id": "vnb-lesson-04-04",
+                            "title": "04 Pedir Perdão ao Próximo",
+                            "videoUrl": "https://drive.google.com/file/d/1oWfAOmdALZeLynvIhbksbttrN-SJsvql/view"
+                        },
+                        {
+                            "id": "vnb-lesson-04-05",
+                            "title": "05 Perdoar o Próximo",
+                            "videoUrl": "https://drive.google.com/file/d/1dsA2qpWqZ4hhMTGaP_g5jqT04O6Wnwrd/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-05",
+                    "title": "05 ORAÇÃO - Como Deus Responde Nossa Oração",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-05-01",
+                            "title": "01 Por Que orar",
+                            "videoUrl": "https://drive.google.com/file/d/12eRjNLRQlFq1HffgNmUahvf7FyuGKKYe/view"
+                        },
+                        {
+                            "id": "vnb-lesson-05-02",
+                            "title": "02 Como orar",
+                            "videoUrl": "https://drive.google.com/file/d/1hTu1UkEmnKLHRAWixJutmeX9FfWKkf19/view"
+                        },
+                        {
+                            "id": "vnb-lesson-05-03",
+                            "title": "03 Quando e Onde devemos orar",
+                            "videoUrl": "https://drive.google.com/file/d/1uRWmpKDggNhYskE-7cFv-IynL6w_c-Nl/view"
+                        },
+                        {
+                            "id": "vnb-lesson-05-04",
+                            "title": "04 A Oração Ensinada por Jesus",
+                            "videoUrl": "https://drive.google.com/file/d/1NGEaN-AG3oSmiQS6JoyWlRl16iBIixy4/view"
+                        },
+                        {
+                            "id": "vnb-lesson-05-05",
+                            "title": "05 Quem recebe nossas orações",
+                            "videoUrl": "https://drive.google.com/file/d/1vf-sUbFpIXzJcwLvahtcq20zh702tk0T/view"
+                        },
+                        {
+                            "id": "vnb-lesson-05-06",
+                            "title": "06 Deus sabe o que é melhor pra nós",
+                            "videoUrl": "https://drive.google.com/file/d/18--zxuQTxLVI2SJTlOssm0Kv1JKGfL4M/view"
+                        },
+                        {
+                            "id": "vnb-lesson-05-07",
+                            "title": "07 A perseverança na Oração",
+                            "videoUrl": "https://drive.google.com/file/d/1DBbDwUHeVPtygC50MIj-5vnAC8z0hfVc/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-06",
+                    "title": "06 IGREJA - Precisamos Mesmo da Igreja",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-06-01",
+                            "title": "01 A igreja espiritual",
+                            "videoUrl": "https://drive.google.com/file/d/1ohrNkn96mItkreNM9W6dE9sCnZ2viIK3/view"
+                        },
+                        {
+                            "id": "vnb-lesson-06-02",
+                            "title": "02 A vigreja local",
+                            "videoUrl": "https://drive.google.com/file/d/1mje20vZffroTYdlrX8u3WTFqNkc40rvD/view"
+                        },
+                        {
+                            "id": "vnb-lesson-06-03",
+                            "title": "03 Qual a igreja verdadeira",
+                            "videoUrl": "https://drive.google.com/file/d/1mf2wbgmQTlF8ae4xKNLe4PxsnEfNAu5C/view"
+                        },
+                        {
+                            "id": "vnb-lesson-06-04",
+                            "title": "04 Os problemas na igreja",
+                            "videoUrl": "https://drive.google.com/file/d/1ODNyThE2CKjL3nlz2D2RljWWNAhaldEd/view"
+                        },
+                        {
+                            "id": "vnb-lesson-06-05",
+                            "title": "05 A importancia da submissão",
+                            "videoUrl": "https://drive.google.com/file/d/1P6UWm735cO2rKzs72gdxgvzu42veI-tu/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-07",
+                    "title": "07 JEJUM - Pra Que Serve o Jejum",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-07-01",
+                            "title": "01 Votos ou Propósitos",
+                            "videoUrl": "https://drive.google.com/file/d/1gqWBEQz5daNZaf8WwWTY6xNB144LQH7Q/view"
+                        },
+                        {
+                            "id": "vnb-lesson-07-02",
+                            "title": "02 Jejum bíblico (cane x espirito)",
+                            "videoUrl": "https://drive.google.com/file/d/1FL_dE2pQGU2s5FKHcztDtc6vXU8nzJ29/view"
+                        },
+                        {
+                            "id": "vnb-lesson-07-03",
+                            "title": "03 Por que o jejum funciona",
+                            "videoUrl": "https://drive.google.com/file/d/1u8HWBao8zD2iPiTfXBcfZwskoOsqtQrU/view"
+                        },
+                        {
+                            "id": "vnb-lesson-07-04",
+                            "title": "04 Como fazer o jejum",
+                            "videoUrl": "https://drive.google.com/file/d/1BsHReyatEG-MdypwTI1RY3v6buBhXReE/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-08",
+                    "title": "08 FÉ - O Que é Fé Bíblica",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-08-01",
+                            "title": "01 O que não é Fé",
+                            "videoUrl": "https://drive.google.com/file/d/1YU2T39TGyExLG7qTD2CHxUe3g9_nqUOM/view"
+                        },
+                        {
+                            "id": "vnb-lesson-08-02",
+                            "title": "02 Fé natural",
+                            "videoUrl": "https://drive.google.com/file/d/1T7yb2OqHlMWnnvB7e9Mmc71FWHJkPFnH/view"
+                        },
+                        {
+                            "id": "vnb-lesson-08-03",
+                            "title": "03 Fé bíblica",
+                            "videoUrl": "https://drive.google.com/file/d/1Rb7XB9cn9qFcN64bLQu-6cRICbwqSyI-/view"
+                        },
+                        {
+                            "id": "vnb-lesson-08-04",
+                            "title": "04 Como funciona a fé bíblica",
+                            "videoUrl": "https://drive.google.com/file/d/1Yk-ImubZxYnUidHlcxStqtfxLc9Bj_RC/view"
+                        },
+                        {
+                            "id": "vnb-lesson-08-05",
+                            "title": "05 Como ter fé",
+                            "videoUrl": "https://drive.google.com/file/d/1VQyTJlzH86E95hdY7QwDCmNY1-4L-MvS/view"
+                        },
+                        {
+                            "id": "vnb-lesson-08-06",
+                            "title": "06 Como desenvolver nossa fé",
+                            "videoUrl": "https://drive.google.com/file/d/1qDvuzR9MgzQtN9Q-ypyyqiIFFachKznS/view"
+                        },
+                        {
+                            "id": "vnb-lesson-08-07",
+                            "title": "07 A fé e o futuro",
+                            "videoUrl": "https://drive.google.com/file/d/1fjq9y7zYzzpVtP1-LHoNWF3yhNSAUx9H/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-09",
+                    "title": "09 BASTISMO - Batismo e Salvação",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-09-01",
+                            "title": "01 A Salvação no antigo testamento",
+                            "videoUrl": "https://drive.google.com/file/d/1Imfyjeknq6suiCVeyupbka642si2Py0V/view"
+                        },
+                        {
+                            "id": "vnb-lesson-09-02",
+                            "title": "02 Por Que Jesus se batizou",
+                            "videoUrl": "https://drive.google.com/file/d/1NJg1aONufkOjwA0GEP0iyTQ1jmgzO7i7/view"
+                        },
+                        {
+                            "id": "vnb-lesson-09-03",
+                            "title": "03 O batismo salva",
+                            "videoUrl": "https://drive.google.com/file/d/1HAbZonBLfNLskyX_7Yq9tZBu4IJe1dZi/view"
+                        },
+                        {
+                            "id": "vnb-lesson-09-04",
+                            "title": "04 Precisamos do batismo",
+                            "videoUrl": "https://drive.google.com/file/d/1I2vf_iYoa6UpWLYErv_wwz9Oq42nH5PJ/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-10",
+                    "title": "10 BÍBLIA - Por Que Crer na Bíblia",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-10-01",
+                            "title": "01 Sua forma",
+                            "videoUrl": "https://drive.google.com/file/d/1NaUqM8DuV-wjwDmcLopcwVyYNwQtRQxu/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-02",
+                            "title": "02 Sua autoria",
+                            "videoUrl": "https://drive.google.com/file/d/1IbSQFDVEEQUrnTXr_ZXJeo7eIAZnloOy/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-03",
+                            "title": "03 Sua inerrancia",
+                            "videoUrl": "https://drive.google.com/file/d/1dYspwsINIj00cmpJJZWip1MR0iTw5vlW/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-04",
+                            "title": "04 Sua credibilidade",
+                            "videoUrl": "https://drive.google.com/file/d/1adW2zn-hPw-eXcLFWovBzkRQk3uK0bMD/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-05",
+                            "title": "05 Sua coerencia",
+                            "videoUrl": "https://drive.google.com/file/d/1V-G-HFidCBxyAuWYUR6ET9xVg7zz44SG/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-06",
+                            "title": "06 Sua concordancia",
+                            "videoUrl": "https://drive.google.com/file/d/1B5Kl063gNgT7jPqreeoQRV8ablxbtcpE/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-07",
+                            "title": "07 Suaus prefecias",
+                            "videoUrl": "https://drive.google.com/file/d/1hQ7-LfNR3DxK408f2wW_Bhh2Lpz7gA1n/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-08",
+                            "title": "08 Seu assunto central",
+                            "videoUrl": "https://drive.google.com/file/d/18eylNwQ_jiHJmmfyzF4XEddTBVGduWTM/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-09",
+                            "title": "09 Sua revelaçã",
+                            "videoUrl": "https://drive.google.com/file/d/1rbsQwCnHFX2xWj28BRIWj6x9IM8ccWld/view"
+                        },
+                        {
+                            "id": "vnb-lesson-10-10",
+                            "title": "10 Suas Promessas",
+                            "videoUrl": "https://drive.google.com/file/d/11wqwoGxu-T6hEV4mofoXjimPp1WQlF0O/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-11",
+                    "title": "11 DEUS - Como Deus é",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-11-01",
+                            "title": "01 Deus é o Criador",
+                            "videoUrl": "https://drive.google.com/file/d/1ARc7y4edcysBGOwNcqlGTHDkkE3CY03J/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-02",
+                            "title": "02 Deus é Eterno",
+                            "videoUrl": "https://drive.google.com/file/d/1SoFzDKCsq4NYROzi_q4RcN5tHfEG3L1t/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-03",
+                            "title": "03 Deus é auto-existente",
+                            "videoUrl": "https://drive.google.com/file/d/1YYWfBaUM1V4auZHeZWgju6-g8f_qwepm/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-04",
+                            "title": "04 Deus é Imutavel",
+                            "videoUrl": "https://drive.google.com/file/d/1y52SLgnv7U7GFcOimyvVJD2sceiZrXAQ/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-05",
+                            "title": "05 Deus é Infinito",
+                            "videoUrl": "https://drive.google.com/file/d/1YmWw5BC1OO0bdOi2R0c_e_cIem-yDp1P/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-06",
+                            "title": "06 Deus é único",
+                            "videoUrl": "https://drive.google.com/file/d/191L17_vLa8HrpU99GHRq-SIBsIr0kcEf/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-07",
+                            "title": "07 Deus é onipresente",
+                            "videoUrl": "https://drive.google.com/file/d/1mnoBF8pb7ZYX3hDx8QFFgYnTGWA7quaG/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-08",
+                            "title": "08 Deus é uma pessoa",
+                            "videoUrl": "https://drive.google.com/file/d/1qha9uG7tjiJ5oUkRxKbnsBE3Uq5V1Twv/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-09",
+                            "title": "09 Deus é espirito",
+                            "videoUrl": "https://drive.google.com/file/d/1d5zOFnylSMxhwG-K2qqo6d5UVj4qYlmI/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-10",
+                            "title": "10 Deus é onisciente",
+                            "videoUrl": "https://drive.google.com/file/d/1G4FcQxLIRVmKLEkzYVG4rCOxLmYc94ZO/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-11",
+                            "title": "11 Deus é onipotente",
+                            "videoUrl": "https://drive.google.com/file/d/1gNy4sGKvb_a36gS-E5Cqr-gSrE2Ksoz_/view"
+                        },
+                        {
+                            "id": "vnb-lesson-11-12",
+                            "title": "12 Deus é bom",
+                            "videoUrl": "https://drive.google.com/file/d/1Kg73iaLnJ9XBBEm1AXj_rYDOf7_cuifH/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-12",
+                    "title": "12 DIABO - O Diabo e a Origem do Mal",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-12-01",
+                            "title": "01 Quem é o diabo",
+                            "videoUrl": "https://drive.google.com/file/d/1yzNN03LPLkwcJEscvu05rftrDPYXGJ8P/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-02",
+                            "title": "02 Deus criou o mal",
+                            "videoUrl": "https://drive.google.com/file/d/1w9jA_C37c0cNp2JguseS8S1_vCcLxnkh/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-03",
+                            "title": "03 A origem do diabo",
+                            "videoUrl": "https://drive.google.com/file/d/1t1AWOAmgWjtxrJp452EKP7GaTtEvjjgM/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-04",
+                            "title": "04 O diabo e a queda do homem",
+                            "videoUrl": "https://drive.google.com/file/d/1SCEv0wVBZDyZs38l4ETW6Gl7R06iIAgD/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-05",
+                            "title": "05 Onde o diabo esta",
+                            "videoUrl": "https://drive.google.com/file/d/1hv7iHFmhg6fcqdH6NZ3c1-2DyoBkzZwa/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-06",
+                            "title": "06 O que o diabo sabe",
+                            "videoUrl": "https://drive.google.com/file/d/1FC3SvRoSdQy7tIWMUZt2OQ-TPX3jdgSK/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-07",
+                            "title": "07 Oque o diabo pode fazer",
+                            "videoUrl": "https://drive.google.com/file/d/1oNIOq1FV9WKlRYEnyHEVbiBh5SUlo23Z/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-08",
+                            "title": "08 O diabo e os demonios",
+                            "videoUrl": "https://drive.google.com/file/d/1IZoYtxXQ_uYBs-8njF9vxwHp9OOXDlPP/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-09",
+                            "title": "09 O que o diabo quer",
+                            "videoUrl": "https://drive.google.com/file/d/11XiQYEBhbrCpzKInUEEKiIf-unVGTzJX/view"
+                        },
+                        {
+                            "id": "vnb-lesson-12-10",
+                            "title": "10 A estratégia do diabo",
+                            "videoUrl": "https://drive.google.com/file/d/1fi7JGgYpyf_3WkZGiQ7_D9pucXiwOMe1/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-13",
+                    "title": "13 JESUS - Quem e Jesus Cristo",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-13-01",
+                            "title": "01 A Divindade de Jesus Cristo",
+                            "videoUrl": "https://drive.google.com/file/d/1yM5BsbNfUGOH6mXPlIMtnXQpExMkmoD5/view"
+                        },
+                        {
+                            "id": "vnb-lesson-13-02",
+                            "title": "02 A humanidade de Cristo",
+                            "videoUrl": "https://drive.google.com/file/d/1821WMSNSWMGCpLsnBNH2Dkltukg3SobZ/view"
+                        },
+                        {
+                            "id": "vnb-lesson-13-03",
+                            "title": "03 Jesus deixou de ser Deus",
+                            "videoUrl": "https://drive.google.com/file/d/1zPJ_g23bnlGFC9GxNJ2YflQjFC3hMcC-/view"
+                        },
+                        {
+                            "id": "vnb-lesson-13-04",
+                            "title": "04 Jesus demonstrou ser Deus",
+                            "videoUrl": "https://drive.google.com/file/d/14tPf4kHddax7Rtqbq1fSD4MfFZH5fHn0/view"
+                        },
+                        {
+                            "id": "vnb-lesson-13-05",
+                            "title": "05 As duas naturezas de Jesus Cristo",
+                            "videoUrl": "https://drive.google.com/file/d/1StWcKxPXC7hbg_ZWvm-qx7TLdVBc5Wem/view"
+                        },
+                        {
+                            "id": "vnb-lesson-13-06",
+                            "title": "06 Alguma conclusões anti-bíblicas",
+                            "videoUrl": "https://drive.google.com/file/d/1kTYhbMy6qBKbAjQrdHbr79ox06jgUf-9/view"
+                        },
+                        {
+                            "id": "vnb-lesson-13-07",
+                            "title": "07 A necessidade das duas naturezas",
+                            "videoUrl": "https://drive.google.com/file/d/1lJDysHclROE0EdN8XowJ6kik1v-lA_gW/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-14",
+                    "title": "14 ESPÍRITO SANTO - Quem é o Espírito Santo",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-14-01",
+                            "title": "01 A pessoalidade do Espírito Santo",
+                            "videoUrl": "https://drive.google.com/file/d/133tENQdx9QMg57ECvKpq_nZVtSq0YZPW/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-02",
+                            "title": "02 Pessoa ou personificação",
+                            "videoUrl": "https://drive.google.com/file/d/1yvW7nx6dFQzCXLMrTM2GF0QhaP9WTEZE/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-03",
+                            "title": "03 Pessoa ou Poder de Deus",
+                            "videoUrl": "https://drive.google.com/file/d/1JhWAbKQDTV-0lR7v7eRB9EaPLITBTJj4/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-04",
+                            "title": "04 Características pessoais",
+                            "videoUrl": "https://drive.google.com/file/d/1obIwSHUSqbeL_iJtNSYGrlqffPsK94yy/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-05",
+                            "title": "05 A divindade do Espírito Santo",
+                            "videoUrl": "https://drive.google.com/file/d/1KKrzegJgEt4-JDHiynyEb1DxgCe8lA94/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-06",
+                            "title": "06 A Trinidade Divina",
+                            "videoUrl": "https://drive.google.com/file/d/1CY8bWLe6CYTGwKJEOwQrdU45P7peEZP8/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-07",
+                            "title": "07 A blasfêmia contra o Espírito Santo",
+                            "videoUrl": "https://drive.google.com/file/d/1MVWwf1one32Shhj3pyknf2UDLQBcC9bn/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-08",
+                            "title": "08 Títulos e simbolos",
+                            "videoUrl": "https://drive.google.com/file/d/1BSD_HJ1yqPg6p4Kf78RYrOOuGqiIuMrh/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-09",
+                            "title": "09 As obras do Espírito Santo",
+                            "videoUrl": "https://drive.google.com/file/d/1Pkv3vSMTOAC2B-2RM65B_XSyLru6FRdb/view"
+                        },
+                        {
+                            "id": "vnb-lesson-14-10",
+                            "title": "10 O Espírito Santo na Igreja",
+                            "videoUrl": "https://drive.google.com/file/d/129pz8VtdyYQ_27PTo5Go55UgStwDa99J/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-15",
+                    "title": "15 FRUTO DO ESPÍRITO - O Fruto do Espírito Santo",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-15-01",
+                            "title": "01 O que é Fruto do Espírito",
+                            "videoUrl": "https://drive.google.com/file/d/1YRB4JfigMWmYieKQoV0tRqA2aTGUovkg/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-02",
+                            "title": "02 Amor",
+                            "videoUrl": "https://drive.google.com/file/d/1naZ7IAWWNzuhfjz85o4f1iSV98cA3PCe/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-03",
+                            "title": "03 Alegria",
+                            "videoUrl": "https://drive.google.com/file/d/1xgsElKvXFEbBtU8QcNNqN7T42bjKdSyk/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-04",
+                            "title": "04 Paz",
+                            "videoUrl": "https://drive.google.com/file/d/1WiUJTzfICn6EtRUaG4RZHUDe5CrK2muL/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-05",
+                            "title": "05 Paciência",
+                            "videoUrl": "https://drive.google.com/file/d/1aQLIBLbeCLlOU4W2CXEwOQ64-xt9tUfP/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-06",
+                            "title": "06 Benignidade",
+                            "videoUrl": "https://drive.google.com/file/d/18kImSUocXzzBjvWD0Y8hA8yvpW7L58gy/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-07",
+                            "title": "07 Bondade",
+                            "videoUrl": "https://drive.google.com/file/d/1R6GrT24QWHqOni5HPtN8NIvrJ0cVKwv9/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-08",
+                            "title": "08 Fidelidade",
+                            "videoUrl": "https://drive.google.com/file/d/1cQwdBcJlQ16TLjT7gnau-pHQ0HRLMpbi/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-09",
+                            "title": "09 Mansidão",
+                            "videoUrl": "https://drive.google.com/file/d/1xlkB2BuWwjIkSTnWYBbLW-OL3mCz6C-H/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-10",
+                            "title": "10 Dominio Próprio",
+                            "videoUrl": "https://drive.google.com/file/d/1FvXudVNxKUMqGGeCEaE-KGsX_SaUhbxF/view"
+                        },
+                        {
+                            "id": "vnb-lesson-15-11",
+                            "title": "11 Como desenvolver o fruto",
+                            "videoUrl": "https://drive.google.com/file/d/1fybAcX0eibJe-juPJGJ2gtV2bj32j6ra/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-16",
+                    "title": "16 SANTIDADE - Como andar em Santidade",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-16-01",
+                            "title": "01 O que é ser Santo",
+                            "videoUrl": "https://drive.google.com/file/d/1Uw50hxUpRjf1kB839UTGE8u9N_gJ9j9A/view"
+                        },
+                        {
+                            "id": "vnb-lesson-16-02",
+                            "title": "02 Como ser santo",
+                            "videoUrl": "https://drive.google.com/file/d/1REF_f9xbtrkHvLeiUGTbw5___g8Oo4SF/view"
+                        },
+                        {
+                            "id": "vnb-lesson-16-03",
+                            "title": "03 A Santidade e o pecado",
+                            "videoUrl": "https://drive.google.com/file/d/1kyF95Nnj5cuEcaR_-Xnq5QmuLLFvSTgO/view"
+                        },
+                        {
+                            "id": "vnb-lesson-16-04",
+                            "title": "04 A aparência de santidade",
+                            "videoUrl": "https://drive.google.com/file/d/1KJj33cGOVSe0CwZH7itYHF6IIfYeWWQ0/view"
+                        },
+                        {
+                            "id": "vnb-lesson-16-05",
+                            "title": "05 A verdadeira santidade",
+                            "videoUrl": "https://drive.google.com/file/d/1g94FeXLhPFEHlorfLN73CRyFHwGPQkVl/view"
+                        },
+                        {
+                            "id": "vnb-lesson-16-06",
+                            "title": "06 O que é andar em santidade",
+                            "videoUrl": "https://drive.google.com/file/d/1aN2pCWZw-2zwayxORgpZFVJ78FX17a8L/view"
+                        },
+                        {
+                            "id": "vnb-lesson-16-07",
+                            "title": "07 É possível andar em santidade",
+                            "videoUrl": "https://drive.google.com/file/d/1X46HnSZytqg7fiJ9hlOYTgjm8W_kM4Br/view"
+                        },
+                        {
+                            "id": "vnb-lesson-16-08",
+                            "title": "08 A santidade é um processo",
+                            "videoUrl": "https://drive.google.com/file/d/1ZSopc9sDyP6-7lX0YawOY8Ia0LrNwx64/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-17",
+                    "title": "17 SEXO - O Sexo e a Bíblia",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-17-01",
+                            "title": "01 Como aprender sobre sexo",
+                            "videoUrl": "https://drive.google.com/file/d/1PeZZpwXZ1MAYh0lkhY-vTGgtaJTX9uok/view"
+                        },
+                        {
+                            "id": "vnb-lesson-17-02",
+                            "title": "02 O propósito do sexo",
+                            "videoUrl": "https://drive.google.com/file/d/1tMM311LYFzqDMth6xooCyw7icLyqCrZE/view"
+                        },
+                        {
+                            "id": "vnb-lesson-17-03",
+                            "title": "03 A imoralidade sexual",
+                            "videoUrl": "https://drive.google.com/file/d/1lgDt6ImpdTzPZTb20bK7cw5OFm4puVyi/view"
+                        },
+                        {
+                            "id": "vnb-lesson-17-04",
+                            "title": "04 Onde começa o pecado sexual",
+                            "videoUrl": "https://drive.google.com/file/d/11EQh7uGWI9GdXk3m2y3v3WTvyueEy5Vh/view"
+                        },
+                        {
+                            "id": "vnb-lesson-17-05",
+                            "title": "05 Como vencer o pecado sexual",
+                            "videoUrl": "https://drive.google.com/file/d/12h50AjJLfjOTn2MDYEb7B4Nx_ecLTWlW/view"
+                        },
+                        {
+                            "id": "vnb-lesson-17-06",
+                            "title": "06 A vontade de Deus para o sexo",
+                            "videoUrl": "https://drive.google.com/file/d/1bTnwLsgy3KhAPgTLFO4TSWolObfGZ_R8/view"
+                        },
+                        {
+                            "id": "vnb-lesson-17-07",
+                            "title": "07 O sexo abençoado por Deus",
+                            "videoUrl": "https://drive.google.com/file/d/16bRXM0308KgTOup3Eu0OOQ65LbjWgJgq/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-18",
+                    "title": "18 AMOR - O que é Amor",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-18-01",
+                            "title": "01 O maior mandamento",
+                            "videoUrl": "https://drive.google.com/file/d/120k7Cfomb2GzGyTEmhJVc6GJ4xBWg1KU/view"
+                        },
+                        {
+                            "id": "vnb-lesson-18-02",
+                            "title": "02 Amor (Phileo)",
+                            "videoUrl": "https://drive.google.com/file/d/1HV1cUb1wlKlrJuTrnWxKNtL1jdOxTuP-/view"
+                        },
+                        {
+                            "id": "vnb-lesson-18-03",
+                            "title": "03 Amor (storge)",
+                            "videoUrl": "https://drive.google.com/file/d/1F0qaXQRHUgWt0yTYNoTcMUdPR0pXRSLY/view"
+                        },
+                        {
+                            "id": "vnb-lesson-18-04",
+                            "title": "04 Amor (eros)",
+                            "videoUrl": "https://drive.google.com/file/d/1LgCs5wV0biSwf7g4wS93gNPmSNbSBwSG/view"
+                        },
+                        {
+                            "id": "vnb-lesson-18-05",
+                            "title": "05 Amor (ágape)",
+                            "videoUrl": "https://drive.google.com/file/d/1sH1E3ocq0GG_0XMMImxKYKBmvtxrdusQ/view"
+                        },
+                        {
+                            "id": "vnb-lesson-18-06",
+                            "title": "06 Como amar",
+                            "videoUrl": "https://drive.google.com/file/d/1evUFb9XCitLkAwjDoA1hHOhJvnJfCFVM/view"
+                        },
+                        {
+                            "id": "vnb-lesson-18-07",
+                            "title": "07 A revelação do amor de Deus",
+                            "videoUrl": "https://drive.google.com/file/d/1U41d3ezrMShjInN9WU6C51Cz7ZlL51gm/view"
+                        },
+                        {
+                            "id": "vnb-lesson-18-08",
+                            "title": "08 A obediência",
+                            "videoUrl": "https://drive.google.com/file/d/1z8KEVuSZv49loxyFsjsoAq09K_bjBQzq/view"
+                        },
+                        {
+                            "id": "vnb-lesson-18-09",
+                            "title": "09 A prática do amor",
+                            "videoUrl": "https://drive.google.com/file/d/1Ue3cqiFRtPtzZbQLZeLPlrqgETw6TwkT/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-19",
+                    "title": "19 INFERNO - O Inferno Existe",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-19-01",
+                            "title": "01 O inferno e a Bíblia",
+                            "videoUrl": "https://drive.google.com/file/d/1Nwp_X2LE_CB4rHzj9eWHREw68ygvriqW/view"
+                        },
+                        {
+                            "id": "vnb-lesson-19-02",
+                            "title": "02 Como será o Inferno",
+                            "videoUrl": "https://drive.google.com/file/d/1X5HTx1uteUxMcUJLsYuXD9ajWkBohmZu/view"
+                        },
+                        {
+                            "id": "vnb-lesson-19-03",
+                            "title": "03 Os condenados deixarão de existir",
+                            "videoUrl": "https://drive.google.com/file/d/1JWd2eudk7E2GSgy3ggqYsiZ8fDd596ot/view"
+                        },
+                        {
+                            "id": "vnb-lesson-19-04",
+                            "title": "04 O sofrimento no inferno sera eterno",
+                            "videoUrl": "https://drive.google.com/file/d/1VSGSu-jqiqDsOGKGhGhB2mEpyiJ6gdJz/view"
+                        },
+                        {
+                            "id": "vnb-lesson-19-05",
+                            "title": "05 O inferno é injusto",
+                            "videoUrl": "https://drive.google.com/file/d/1KbCLRorowbdJIA4iqelnZtXd0docbSRA/view"
+                        },
+                        {
+                            "id": "vnb-lesson-19-06",
+                            "title": "06 A soberania de Deus",
+                            "videoUrl": "https://drive.google.com/file/d/1RjpyHUuuzaTmGD5SYzBtwD0kPeALnfzV/view"
+                        },
+                        {
+                            "id": "vnb-lesson-19-07",
+                            "title": "07 O inferno e o amor de Deus",
+                            "videoUrl": "https://drive.google.com/file/d/1eoQ7NezmTDXebPOIWzh1sx1Vl5JNKZG5/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-20",
+                    "title": "20 HERESIAS - Seitas e Heresias",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-20-01",
+                            "title": "01 Nossa única fonte segura",
+                            "videoUrl": "https://drive.google.com/file/d/1NC5IP0udHTlADU1o-oI1kEMEFTHetJ6Q/view"
+                        },
+                        {
+                            "id": "vnb-lesson-20-02",
+                            "title": "02 A heresia",
+                            "videoUrl": "https://drive.google.com/file/d/1MpQxOEgi8ZHV2gK2roL120RnTf6DvoXQ/view"
+                        },
+                        {
+                            "id": "vnb-lesson-20-03",
+                            "title": "03 Posições ou Linhas teológicas",
+                            "videoUrl": "https://drive.google.com/file/d/1MHYt4fe8WS3WIT3sSNM8BcDEmRKIjhK1/view"
+                        },
+                        {
+                            "id": "vnb-lesson-20-04",
+                            "title": "04 A seita",
+                            "videoUrl": "https://drive.google.com/file/d/1z4xIJaDCF0OlvcLoROlLYsqisF8-L4X2/view"
+                        },
+                        {
+                            "id": "vnb-lesson-20-05",
+                            "title": "05 Adição",
+                            "videoUrl": "https://drive.google.com/file/d/1Day6kzISHSAOIbY9GFjS6JyZrJ2FKut9/view"
+                        },
+                        {
+                            "id": "vnb-lesson-20-06",
+                            "title": "06 Subtração",
+                            "videoUrl": "https://drive.google.com/file/d/1dlM_CPoKX1s8pp6qHNfcPq4rTr5o-XMH/view"
+                        },
+                        {
+                            "id": "vnb-lesson-20-07",
+                            "title": "07 Multiplicação",
+                            "videoUrl": "https://drive.google.com/file/d/1wjaAwIC9SUggPjBE2K4VdLmUjnouiZtb/view"
+                        },
+                        {
+                            "id": "vnb-lesson-20-08",
+                            "title": "08 Divisão",
+                            "videoUrl": "https://drive.google.com/file/d/14tXyFr6RvsRgyTSB2z74bLNyFFg0duPA/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-21",
+                    "title": "21 ETERNIDADE - Como será a Eternidade",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-21-01",
+                            "title": "01 Quando começa a Eternidade",
+                            "videoUrl": "https://drive.google.com/file/d/1udZcU4dzIc1fTo9KhljAaVgki4zPPIas/view"
+                        },
+                        {
+                            "id": "vnb-lesson-21-02",
+                            "title": "02 É possível saber como sera a Eternidade",
+                            "videoUrl": "https://drive.google.com/file/d/1eUZsihE2Emq8-8TQB0j_6jTcRqEXQPgS/view"
+                        },
+                        {
+                            "id": "vnb-lesson-21-03",
+                            "title": "03 Como sera nosso corpo",
+                            "videoUrl": "https://drive.google.com/file/d/1RZaaQ5tLR6aCSUtdWbOQKf8aVuxCLKj3/view"
+                        },
+                        {
+                            "id": "vnb-lesson-21-04",
+                            "title": "04 Como sera nosso entendimento",
+                            "videoUrl": "https://drive.google.com/file/d/1StvAbwH1uKAfUZNVyu0uja6AzmVwKrl0/view"
+                        },
+                        {
+                            "id": "vnb-lesson-21-05",
+                            "title": "05 Como serão nosso sentimentos",
+                            "videoUrl": "https://drive.google.com/file/d/17YDuxSJM-EgghuEzXLcYUXlPlmn3yr8e/view"
+                        },
+                        {
+                            "id": "vnb-lesson-21-06",
+                            "title": "06 Recompensas e afazeres no céu",
+                            "videoUrl": "https://drive.google.com/file/d/1vMK1hdJFUE5Mmctf-scnf4645KDka7bN/view"
+                        },
+                        {
+                            "id": "vnb-lesson-21-07",
+                            "title": "07 Expectativa versus realidade",
+                            "videoUrl": "https://drive.google.com/file/d/1cqapM27srpSnYSuHDmqSU7nPHFggUKhx/view"
+                        },
+                        {
+                            "id": "vnb-lesson-21-08",
+                            "title": "08 O que precisamos fazer agora",
+                            "videoUrl": "https://drive.google.com/file/d/1q1ehvbaJK9tXS0N1wFhixzNN29lc-yiJ/view"
+                        }
+                    ]
+                },
+                {
+                    "id": "vnb-mod-22",
+                    "title": "22 SALVAÇÃO - É possivel perder a salvação",
+                    "lessons": [
+                        {
+                            "id": "vnb-lesson-22-01",
+                            "title": "01 As evdências da Salvação",
+                            "videoUrl": "https://drive.google.com/file/d/1Y1dDOgpvofug1ztfjXjSKzbK3ev9cuQy/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-02",
+                            "title": "02 Aquele que nunca foi salvo",
+                            "videoUrl": "https://drive.google.com/file/d/1cP-9qTGQ79SobfkyQ8ClS_7oGbEx1HVF/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-03",
+                            "title": "03 As 7 evidencias que não houve conversão",
+                            "videoUrl": "https://drive.google.com/file/d/1ksRt3LukyOqgSsFS9g7__qJavCSk21GA/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-04",
+                            "title": "04 Aquele que foi salvo",
+                            "videoUrl": "https://drive.google.com/file/d/1ki7u4BAPEwjwGlY_XlXnKpMd0z5W_HwI/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-05",
+                            "title": "05 O pecado deliberado",
+                            "videoUrl": "https://drive.google.com/file/d/1z0BkSzc-E3Rt66CGjpgxYc9IJ6iF8WSo/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-06",
+                            "title": "06 A apostasia",
+                            "videoUrl": "https://drive.google.com/file/d/1EzJTHoujX0J8zwvM5Sb-eRY39nQ0S8C1/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-07",
+                            "title": "07 Como saber se não perdi a salvação",
+                            "videoUrl": "https://drive.google.com/file/d/1YWnQdIp_JAlGeybLTP0hZmRXxFM9zZLh/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-08",
+                            "title": "08 A blasfemia contra o Espírito Santo",
+                            "videoUrl": "https://drive.google.com/file/d/1DcyiGCyhA1fxEvdVxx7dD76POPg8ih68/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-09",
+                            "title": "09 Nada pode nos separar do Amor de Deus",
+                            "videoUrl": "https://drive.google.com/file/d/14BU38xCiW4DEY_hx-6kKuqAu0SnNUBNF/view"
+                        },
+                        {
+                            "id": "vnb-lesson-22-10",
+                            "title": "10 A vida Eterna",
+                            "videoUrl": "https://drive.google.com/file/d/1XliyXCstvu912onxqF_gpTTG0Tajk7MM/view"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

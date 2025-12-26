@@ -1,0 +1,41 @@
+# INFORMAÇÕES DE EXPORTAÇÃO DO APP - CURSOS ILIMITADOS
+
+Este arquivo contém as credenciais necessárias para gerar o APK do aplicativo. 
+Mantenha este arquivo e o arquivo 'cursos-ilimitados.jks' em segurança.
+
+---
+
+## 🔑 Credenciais da Chave (Keystore)
+- **Arquivo da Chave:** cursos-ilimitados.jks
+- **Senha da Keystore:** 123456
+- **Alias (Apelido):** cursos-key
+- **Senha da Chave (Key):** 123456
+
+---
+
+## 🚀 Passo a Passo para Gerar um Novo APK
+
+Sempre que você fizer alterações no código e quiser atualizar o app no celular:
+
+### 1. Preparar os arquivos no VS Code / Terminal:
+Abra o terminal na pasta do projeto e rode:
+```bash
+npm run build
+npx cap sync android
+```
+(Isso compila o seu código e envia para a pasta do Android).
+
+### 2. Gerar o APK no Android Studio:
+1. Abra o Android Studio.
+2. Vá em **Build** > **Generate Signed Bundle / APK...**
+3. Selecione **APK** e clique em **Next**.
+4. Selecione o arquivo `cursos-ilimitados.jks`.
+5. Preencha as senhas e o alias conforme listado acima.
+6. Clique em **Next**, escolha a variante **release** e clique em **Create**.
+
+### 3. Localizar e Instalar:
+O novo APK estará em: `android/app/release/app-release.apk`
+Basta enviar para o celular e instalar por cima do anterior!
+
+---
+*Nota: Se você trocar de celular ou formatar o computador, você PRECISARÁ do arquivo 'cursos-ilimitados.jks' e dessas senhas para conseguir atualizar o mesmo app. Guarde-os bem!*

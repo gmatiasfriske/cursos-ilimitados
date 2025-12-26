@@ -1,0 +1,27 @@
+{
+    "courses": [
+        {
+            "id": "id-do-curso",
+            "title": "Nome do Curso",
+            "imageUrl": "https://link-da-imagem.com/capa.jpg",
+            "modules": [
+                {
+                    "id": "id-do-modulo",
+                    "title": "Módulo 1: Introdução",
+                    "lessons": [
+                        {
+                            "id": "id-da-aula-01",
+                            "title": "Aura 01: Bem-vindo",
+                            "videoUrl": "https://drive.google.com/file/d/ID_DO_VIDEO/view"
+                        },
+                        {
+                            "id": "id-da-aula-02",
+                            "title": "Aula 02: Primeiros Passos",
+                            "videoUrl": "https://drive.google.com/file/d/ID_DO_VIDEO/view"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

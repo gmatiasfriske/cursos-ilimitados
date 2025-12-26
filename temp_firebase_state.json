@@ -1,0 +1,550 @@
+{
+    "courses": [
+        {
+            "id": "curso-01",
+            "imageUrl": "https://example.com/capa.jpg",
+            "modules": [
+                {
+                    "id": "mod-01",
+                    "lessons": [
+                        {
+                            "id": "aula-01",
+                            "title": "O que é Teologia?",
+                            "videoUrl": "https://drive.google.com/file/d/VIDEO_ID_HERE/view"
+                        }
+                    ],
+                    "title": "Introdução"
+                }
+            ],
+            "title": "Teologia Sistemática"
+        },
+        {
+            "id": "becaflix",
+            "imageUrl": "https://drive.google.com/thumbnail?id=12a-aRJHtNA6aYVqh82IpQV7SelEvO363&sz=w1000",
+            "modules": [
+                {
+                    "id": "beca-mod-00",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-00-01",
+                            "title": "1. Boas Vindas",
+                            "videoUrl": "https://drive.google.com/file/d/1SIM53f_8pz8uCD_E3kW1QA5-MhCT4fmq/view"
+                        },
+                        {
+                            "id": "beca-lesson-00-02",
+                            "title": "2. O que você vai aprender",
+                            "videoUrl": "https://drive.google.com/file/d/1eVfjpQvSKaHVkibxHF78BkcDSWooOYeA/view"
+                        },
+                        {
+                            "id": "beca-lesson-00-03",
+                            "title": "3. Orientações importantes",
+                            "videoUrl": "https://drive.google.com/file/d/1KgZps8eJCxLFwRRnFrA8M1ohTZ1mQL1F/view"
+                        }
+                    ],
+                    "title": "Módulo 0 - Comece por aqui"
+                },
+                {
+                    "id": "beca-mod-01",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-01-01",
+                            "title": "1. Saiba o que está fazendo",
+                            "videoUrl": "https://drive.google.com/file/d/1tjMxhgSaAO1TIIPQqaeWS98HdCAEEgya/view"
+                        },
+                        {
+                            "id": "beca-lesson-01-02",
+                            "title": "2. Conceitos Básicos",
+                            "videoUrl": "https://drive.google.com/file/d/1nTVFZYJa-2lDqHjl6rWwQxjI5p3YNKSW/view"
+                        },
+                        {
+                            "id": "beca-lesson-01-03",
+                            "title": "3. Controles Vocais",
+                            "videoUrl": "https://drive.google.com/file/d/1pK2GY6jKp6ITl2QNGvw_6Xxr_EFw33ND/view"
+                        },
+                        {
+                            "id": "beca-lesson-01-04",
+                            "title": "4. Fisiologia da voz",
+                            "videoUrl": "https://drive.google.com/file/d/1T4e6xcv_LMhVHFccJGgTh3qzwKBAdG38/view"
+                        },
+                        {
+                            "id": "beca-lesson-01-05",
+                            "title": "5. Como lidar com o emocional",
+                            "videoUrl": "https://drive.google.com/file/d/13MbBZK56GWXenbFx_9O8oSGtARy3CfNH/view"
+                        }
+                    ],
+                    "title": "Módulo 1 - Introdução ao canto"
+                },
+                {
+                    "id": "beca-mod-02",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-02-01",
+                            "title": "1. Desafios do cantor cristão",
+                            "videoUrl": "https://drive.google.com/file/d/1rnAe0yedvR-SfqW6RMhdlcae20xdFS-E/view"
+                        },
+                        {
+                            "id": "beca-lesson-02-02",
+                            "title": "2. Estudo e constância",
+                            "videoUrl": "https://drive.google.com/file/d/1GvT_9YdqiOUiLYybkq-zFx2TfFfrlwD0/view"
+                        },
+                        {
+                            "id": "beca-lesson-02-03",
+                            "title": "3. Inimigos do cantor",
+                            "videoUrl": "https://drive.google.com/file/d/1yNERM449T_zr7HDX-aCHwOy-QJrIBlqL/view"
+                        },
+                        {
+                            "id": "beca-lesson-02-04",
+                            "title": "4. Referências e repertório",
+                            "videoUrl": "https://drive.google.com/file/d/1j7nfvCw_doKBcoE2_GPdngQYwhBItr8f/view"
+                        },
+                        {
+                            "id": "beca-lesson-02-05",
+                            "title": "5. Tipos de Cantor",
+                            "videoUrl": "https://drive.google.com/file/d/1_stR-UpJpit_uBryiZllg7yf2EtN-nkv/view"
+                        }
+                    ],
+                    "title": "Módulo 2 - Desafios do cantor"
+                },
+                {
+                    "id": "beca-mod-03",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-03-01",
+                            "title": "1. Respiração O que é",
+                            "videoUrl": "https://drive.google.com/file/d/12sc-zsYhJmvz_aRjTHuTx0H2dvFIY3Qw/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-02",
+                            "title": "2. Como sei que estou apoiando certo",
+                            "videoUrl": "https://drive.google.com/file/d/1kjyJjS5Ldl1cgbhxqW4L8eG46b4l4JXW/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-03",
+                            "title": "3. Mapeamento vocal",
+                            "videoUrl": "https://drive.google.com/file/d/168dqcy8YRGkOnqf-YoQJyIj9NwxvC8x7/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-04",
+                            "title": "4. Com muito louvor respiração",
+                            "videoUrl": "https://drive.google.com/file/d/1a5q9wZAF1IEJbJpMNfKlOL-06iZjXJmg/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-05",
+                            "title": "5. Exercício de respiração e sustentação",
+                            "videoUrl": "https://drive.google.com/file/d/1hxsXCXKiKLX5RjTp8Y0nRBsSS1iQ_Ox7/view"
+                        },
+                        {
+                            "id": "beca-lesson-03-06",
+                            "title": "6. Exercício de respiração stacatto",
+                            "videoUrl": "https://drive.google.com/file/d/1oIJ4rEx2vvH6IKXDSGt_-D-NbaSzI2qp/view"
+                        }
+                    ],
+                    "title": "Módulo 3 - Respiração no Canto"
+                },
+                {
+                    "id": "beca-mod-04",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-04-01",
+                            "title": "1. Voz Saudável e Profissionais da Voz",
+                            "videoUrl": "https://drive.google.com/file/d/17Fdfa6BQodk4a2m3wp2Ey3dsym0LgG4_/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-02",
+                            "title": "2. Cuidados Vocais",
+                            "videoUrl": "https://drive.google.com/file/d/14lcYZ41NSIXMivbGjigeopgAcD5umlvJ/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-03",
+                            "title": "3. Aquecimento e Desaquecimento",
+                            "videoUrl": "https://drive.google.com/file/d/11Dg0dJcY3f_MaIgqm1yrJYjRrn2bzI9O/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-04",
+                            "title": "4. Aquecimento 4 Hamming",
+                            "videoUrl": "https://drive.google.com/file/d/1bBbvyKi0I3bcdCx5N0sY58bu5R92x1Nn/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-05",
+                            "title": "4. Cuidados vocais protocolo básico",
+                            "videoUrl": "https://drive.google.com/file/d/1tLuHaYV__fYl15YadyJ5JMY3TC1s3FO2/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-06",
+                            "title": "5. Aquecimento - Bocca Chiusa",
+                            "videoUrl": "https://drive.google.com/file/d/1kSatBJOlbSwPBqKs_5PPlboCDiEX9TuL/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-07",
+                            "title": "6. Alongamento e Relaxamento corporal",
+                            "videoUrl": "https://drive.google.com/file/d/1dM-pUHhVvolFAnCwmZTVpoCQsmvvUvHW/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-08",
+                            "title": "7. Aquecimento PA PE PI",
+                            "videoUrl": "https://drive.google.com/file/d/1c1dogn5I05UIiSiR6cPkz3XYOsTv--Oa/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-09",
+                            "title": "8. Aquecimentp NHÉM NHÉM",
+                            "videoUrl": "https://drive.google.com/file/d/1qKZJaZdx3azOBDB7CHpBNDZHyJgiVZKh/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-10",
+                            "title": "9. Desaquecimento introdução",
+                            "videoUrl": "https://drive.google.com/file/d/1FeT96l6t-wz2oEfDP_YMQy1qWSg6NBaC/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-11",
+                            "title": "10. Desaquecimento Hamming",
+                            "videoUrl": "https://drive.google.com/file/d/15_DLfp_--pCu1NJ7zRkLgLQwv8OGJNqI/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-12",
+                            "title": "11. Desaquecimento 2 TR ou BR",
+                            "videoUrl": "https://drive.google.com/file/d/1fupzhzCVsDxCvuJJifFVDv2qYA7tcqvY/view"
+                        },
+                        {
+                            "id": "beca-lesson-04-13",
+                            "title": "12. Exercício mão espalmada",
+                            "videoUrl": "https://drive.google.com/file/d/1WkK_ttb_0hjrPm4-vAZZmNPCrz9LhH9v/view"
+                        }
+                    ],
+                    "title": "Módulo 4 - Cuidando da Voz"
+                },
+                {
+                    "id": "beca-mod-05",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-05-01",
+                            "title": "1. Cantando somente a melodia",
+                            "videoUrl": "https://drive.google.com/file/d/1QWK44EHAHjOulo4etMpzR1YvVTZsASjj/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-02",
+                            "title": "2. Dicas de aplicativos de percepção",
+                            "videoUrl": "https://drive.google.com/file/d/1ksNeb6kgetE_SQs_JaRud7ZqivNc8CoD/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-03",
+                            "title": "3. Escala cromática",
+                            "videoUrl": "https://drive.google.com/file/d/1rfKLvnlqumZm3vQUf6BSsU7MZbprxtRs/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-04",
+                            "title": "4. Escala de dó maior",
+                            "videoUrl": "https://drive.google.com/file/d/1TwPsgwR9nDHJgO_dUGsCvAwmkswSQO0z/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-05",
+                            "title": "5. Exercício de notas graves",
+                            "videoUrl": "https://drive.google.com/file/d/1JgrGWbd8bl84VP59-NymuQYmndd40v3G/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-06",
+                            "title": "6. Exercício de percepção 1",
+                            "videoUrl": "https://drive.google.com/file/d/1Kqho4pY5Sho0IEeVIw9HwdisPPoVniG4/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-07",
+                            "title": "7. Exercício de troca de registro vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1SI9A63UGCe8ifjisBJFWnvS-DVa329jc/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-08",
+                            "title": "8. Exencício de percepção",
+                            "videoUrl": "https://drive.google.com/file/d/1AaXWYKG34uMy8RpA0bzQLQUr6796LvNU/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-09",
+                            "title": "9. Exercício de troca de registro",
+                            "videoUrl": "https://drive.google.com/file/d/1egstY8wd-6ZycO7yKVed35toL2DA86VC/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-10",
+                            "title": "10. Exercício de notas agúdas",
+                            "videoUrl": "https://drive.google.com/file/d/1jmqzIy_r-jpzV6cs-ANiu49mpxhLvPJJ/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-11",
+                            "title": "11. Firmamento gótico",
+                            "videoUrl": "https://drive.google.com/file/d/1S6bm1GIJ9NAlhiPuP1EBRD30IpkTZmOs/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-12",
+                            "title": "12. Mostrar notas graves médias e agudas",
+                            "videoUrl": "https://drive.google.com/file/d/1Vi2AWYKb8tg2gsONvUOZjfR5PSuMRamn/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-13",
+                            "title": "13. O que é afinação",
+                            "videoUrl": "https://drive.google.com/file/d/1DqT79nUMV3KTxXH3Mi1EQMcm1qlqocs0/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-14",
+                            "title": "14. O que Tua Glória fez comigo afinação",
+                            "videoUrl": "https://drive.google.com/file/d/1JyenRRaYrVpgG31cvnyL-JuOdh8HOBlW/view"
+                        },
+                        {
+                            "id": "beca-lesson-05-15",
+                            "title": "15. Tutorial voice trainning",
+                            "videoUrl": "https://drive.google.com/file/d/1NHLf7AUXsXrlZZny8juh0YVcGH06KZem/view"
+                        }
+                    ],
+                    "title": "Módulo 5 - Afinação e Percepção"
+                },
+                {
+                    "id": "beca-mod-06",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-06-01",
+                            "title": "1. Aplicação prática ritmo",
+                            "videoUrl": "https://drive.google.com/file/d/1B08IGTccGKxPLjLQLGOA9h0ojGEcq7FY/view"
+                        },
+                        {
+                            "id": "beca-lesson-06-02",
+                            "title": "2. Cantando a rítmica",
+                            "videoUrl": "https://drive.google.com/file/d/1za0VUJVoE739z0wqsnfZ4hLHeOnEozaX/view"
+                        },
+                        {
+                            "id": "beca-lesson-06-03",
+                            "title": "3. Entendendo a duração das notas",
+                            "videoUrl": "https://drive.google.com/file/d/1J3t5tLkZdWSJouceW5b88vpHVeMUm5cy/view"
+                        },
+                        {
+                            "id": "beca-lesson-06-04",
+                            "title": "4. Exercício de pulsação",
+                            "videoUrl": "https://drive.google.com/file/d/11_wO9y70NUdXWLYuxprHS30pEVkTpBhD/view"
+                        },
+                        {
+                            "id": "beca-lesson-06-05",
+                            "title": "5. O que rítmica",
+                            "videoUrl": "https://drive.google.com/file/d/1SAlNpR_FCXBlqpwl34UrHy-xaxU_rlvM/view"
+                        }
+                    ],
+                    "title": "Módulo 6 - Cantar no ritmo"
+                },
+                {
+                    "id": "beca-mod-07",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-07-01",
+                            "title": "1. O que é articulação - levantamento palato mole",
+                            "videoUrl": "https://drive.google.com/file/d/1ysmSWClqg0PaKKu_IxF48blI8uumx_Lq/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-02",
+                            "title": "2. Exercício de articulação e projeção",
+                            "videoUrl": "https://drive.google.com/file/d/1IBxuMAVlGSNi_AznQNNlU9UZF43O8X0W/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-03",
+                            "title": "3. Exercício de língua",
+                            "videoUrl": "https://drive.google.com/file/d/1LvOwhYo2bOO0aO3sxp93NxVDKFs42H7l/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-04",
+                            "title": "4. Exercício de projeção chamando alguém",
+                            "videoUrl": "https://drive.google.com/file/d/1NOWCG2keSF2mrGHNSRkdhowyK0XaHRn7/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-05",
+                            "title": "5 e 6. Trava línguas",
+                            "videoUrl": "https://drive.google.com/file/d/18qKaTyRM75pNAMRUXzMQFbm1-NTlCMMn/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-06",
+                            "title": "7. Exercício PA TA CA",
+                            "videoUrl": "https://drive.google.com/file/d/1j7Za1IvgdNH-iznIgiVUo3-pTMLdJRbn/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-07",
+                            "title": "8. Manipulação do fonêma",
+                            "videoUrl": "https://drive.google.com/file/d/1cNHOX-VVa7jjEux1miLwzhkiIOCe-bl5/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-08",
+                            "title": "9. Potência e projeção vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1mg7a-i5sj6ERdAHo_pUef8m9LA2qz2t8/view"
+                        },
+                        {
+                            "id": "beca-lesson-07-09",
+                            "title": "10. Prática projeção alem do rio azul",
+                            "videoUrl": "https://drive.google.com/file/d/13tx79PSq2iSY6-q7bLvul8cQ5zzsu1rl/view"
+                        }
+                    ],
+                    "title": "Módulo 7 - Articulação"
+                },
+                {
+                    "id": "beca-mod-08",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-08-01",
+                            "title": "1. Aplicação prática belting",
+                            "videoUrl": "https://drive.google.com/file/d/1R-3Goor2V1gC43e0H7D-RLpWdvmzuoHC/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-02",
+                            "title": "2. Aplicação prática drives vocais",
+                            "videoUrl": "https://drive.google.com/file/d/1q8aS3QKMAxIaEhuqKBjuR6-Mfnvepdco/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-03",
+                            "title": "3. Aplicação pratica melisma",
+                            "videoUrl": "https://drive.google.com/file/d/13wbk-xADd2oFikumOAtXcLt-Wkb5MZ44/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-04",
+                            "title": "4. Aplicação pratica yodel",
+                            "videoUrl": "https://drive.google.com/file/d/1OgoOVPI6VgdJEqWba7dRJtRbVAGwmo8G/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-05",
+                            "title": "5. apogiatura",
+                            "videoUrl": "https://drive.google.com/file/d/15cM2vt5k2_gpbZecKFFGX4PvcOXXQAsq/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-06",
+                            "title": "6. Exercicio Belting part 1",
+                            "videoUrl": "https://drive.google.com/file/d/1hwTq1txQfbVxnRo8wNlEe07P-aCWF106/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-07",
+                            "title": "7. Exercício Belting part 2",
+                            "videoUrl": "https://drive.google.com/file/d/15FFniidDuXC5nyROeZpRFuv7Wmle_f4d/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-08",
+                            "title": "8. Exercicios melisma agilidade",
+                            "videoUrl": "https://drive.google.com/file/d/1XWu1JmzTjEAKqjDROZBcQtcC2Npb2XTx/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-09",
+                            "title": "9. Melisma Intro",
+                            "videoUrl": "https://drive.google.com/file/d/1IYKzJIs_-bnpweRgqbnI4BoqBZ8L599g/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-10",
+                            "title": "10. Melisma part 2",
+                            "videoUrl": "https://drive.google.com/file/d/13ju1ZJSYGUF8S0W3LGBkEwuOoiB4TF3F/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-11",
+                            "title": "11. Melisma part 3 prática conceitual",
+                            "videoUrl": "https://drive.google.com/file/d/1pEs-qKDf2UED6V0IJYckKc87sWNpE_bT/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-12",
+                            "title": "12. Ornamentos e vicios vocais",
+                            "videoUrl": "https://drive.google.com/file/d/1ZznqYpMX-xxAvpGkh6qctSiWoDtor_Fz/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-13",
+                            "title": "13. Timbragem vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1l9ERoK7_FgBWjrIU0t_pgLBeIr2ZCj9S/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-14",
+                            "title": "14. Timbre",
+                            "videoUrl": "https://drive.google.com/file/d/1UgEzBrMyRghgZ-x1HjWYj_sA_zLTCV3z/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-15",
+                            "title": "15. Trinado pratica",
+                            "videoUrl": "https://drive.google.com/file/d/1XCYkPzAeD0-E0yztuIZcVju9ektOFSBh/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-16",
+                            "title": "16. Trinado",
+                            "videoUrl": "https://drive.google.com/file/d/1db-T5q3XhMF36OMY6zwg7qf1NLgzUFe7/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-17",
+                            "title": "17. Vibrato prática",
+                            "videoUrl": "https://drive.google.com/file/d/13dMtZK8XBYI7yY0Enwc9Iumct0pC4VOZ/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-18",
+                            "title": "18. Vibrato",
+                            "videoUrl": "https://drive.google.com/file/d/1T6sC5Zj8vs_H00X8O_gpzSfnKgApnxza/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-19",
+                            "title": "19. Vocal fry pratica",
+                            "videoUrl": "https://drive.google.com/file/d/1kJOzmbmlYGYYJcIRyUetGgkgJ-WCXiDL/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-20",
+                            "title": "20. Vocal Fry",
+                            "videoUrl": "https://drive.google.com/file/d/1gBjY9KuSKi1PO_xtFwh5WdPAUMslz2eT/view"
+                        },
+                        {
+                            "id": "beca-lesson-08-21",
+                            "title": "21. Yodel",
+                            "videoUrl": "https://drive.google.com/file/d/13bNvC_yDklnxGdXlh8sb3bYN49vJol1e/view"
+                        }
+                    ],
+                    "title": "Módulo 8 - Efeitos vocais"
+                },
+                {
+                    "id": "beca-mod-09",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-09-01",
+                            "title": "1. Exercicio imrprovisação vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1lnxhKLBpxPzm2Kc58HLDeDBUgw37U4hS/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-02",
+                            "title": "2. Expressão vocal e corporal",
+                            "videoUrl": "https://drive.google.com/file/d/18pca_-V6r0-m7kICSLDhXqQV-P0UzBoY/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-03",
+                            "title": "3. Improvisação vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1cAyFdALiGpX8mzhS2AkScbAX76jq9jvF/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-04",
+                            "title": "4. Interpretação musical part 1 e 2",
+                            "videoUrl": "https://drive.google.com/file/d/1xB0BAs8jlLjIMp-VsnCOMlN4ScwSVUoQ/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-05",
+                            "title": "5. Postura e posicionamento de palco",
+                            "videoUrl": "https://drive.google.com/file/d/1ZSC4yGwrPArV-u8_8EyHy6Qn5cFHZZGq/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-06",
+                            "title": "6. Tecnica de backing vocal",
+                            "videoUrl": "https://drive.google.com/file/d/1RmRe8Aq_g794uYDgf_gw4_wsmb0Lsut5/view"
+                        },
+                        {
+                            "id": "beca-lesson-09-07",
+                            "title": "7. Uso do microfone",
+                            "videoUrl": "https://drive.google.com/file/d/1eCF5CxJRpBUN3N9RIUawB9kUWBxWHKSz/view"
+                        }
+                    ],
+                    "title": "Módulo 9 - Melhorando a performance"
+                },
+                {
+                    "id": "beca-mod-10",
+                    "lessons": [
+                        {
+                            "id": "beca-lesson-10-01",
+                            "title": "1. Introdução",
+                            "videoUrl": "https://drive.google.com/file/d/1WOrifCP8eZUuSWOQb_W49zPBQaYSHSrE/view"
+                        },
+                        {
+                            "id": "beca-lesson-10-02",
+                            "title": "2. Tipos de microfones",
+                            "videoUrl": "https://drive.google.com/file/d/1kjgq_zdRTWVyDYlMuek3iQRJ0MSyTN6n/view"
+                        }
+                    ],
+                    "title": "Módulo 10 - Equalização de microfone"
+                }
+            ],
+            "title": "Curso de Canto BECAFLIX"
+        }
+    ]
+}
