@@ -7,17 +7,19 @@ export const correctAndOrganizeNotes = async (text: string): Promise<string> => 
     if (!text || text.trim().length === 0) return '';
 
     const prompt = `
-    Atue como um editor de texto profissional.
-    Sua tarefa é APENAS CORRIGIR gramática/pontuação e ORGANIZAR visualmente o texto abaixo.
-    NÃO adicione informações novas. NÃO resuma demais. Mantenha todo o conteúdo original, apenas deixando-o mais legível.
+    Atue como um editor de texto profissional de alto nível.
+    Sua tarefa é CORRIGIR gramática/pontuação e ORGANIZAR visualmente o texto abaixo de forma estruturada e elegante.
+    NÃO adicione informações novas.
     
-    Use ESTRITAMENTE tags HTML para a formatação:
-    - <b>título/importante</b>
-    - <i>ênfase</i>
-    - <ul><li>lista</li></ul> para tópicos
-    - <br> para quebras de linha
+    DIRETRIZES DE FORMATAÇÃO (ESTRITAMENTE HTML):
+    - Use <b> para termos chave, conceitos importantes e palavras de destaque. Use isso com frequência para facilitar o escaneamento visual.</b>
+    - Use <i> para ênfases sutis ou estrangeirismos.</i>
+    - Use <br><br><b><u>TÍTULO EM CAIXA ALTA</u></b><br> para separar seções distintas se o texto for longo.
+    - Use <ul><li> para listas de tópicos sempre que houver enumerações.
+    - Mantenha parágrafos bem espaçados com <br><br>.
     
-    Retorne APENAS o HTML resultante, sem texto introdutório.
+    Objetivo: O texto deve parecer um resumo profissional e bem estruturado.
+    Retorne APENAS o HTML resultante, sem texto introdutório ou conclusivo.
     
     Texto: "${text}"
     `;

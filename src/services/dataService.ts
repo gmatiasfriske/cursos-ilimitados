@@ -13,32 +13,46 @@ const initialData: AppData = {
 const DATA_KEY = 'app_data_v1';
 
 export const getData = async (): Promise<AppData> => {
-    // 1. Try fetching from Firebase (Online)
-    try {
-        const dbRef = ref(db);
-        const snapshot = await get(child(dbRef, '/'));
-
-        if (snapshot.exists()) {
-            const data = snapshot.val() as AppData;
-            // Sync to local
-            localStorage.setItem(DATA_KEY, JSON.stringify(data));
-            return data;
-        }
-    } catch (error) {
-        console.warn("Offline or Firebase error, using local data.", error);
-    }
-
-    // 2. Fallback to LocalStorage (Offline)
+    // 1. Get Local Storage data first (instant)
     const local = localStorage.getItem(DATA_KEY);
+    let localData: AppData | null = null;
     if (local) {
         try {
-            return JSON.parse(local) as AppData;
+            localData = JSON.parse(local);
         } catch (e) {
             console.error("Local data corrupted", e);
         }
     }
 
-    return initialData;
+    // 2. Try fetching from Firebase in background/concurrently
+    try {
+        const dbRef = ref(db);
+        const fetchPromise = get(child(dbRef, '/'));
+
+        // If we have local data, we return it but also update it when Firebase finishes
+        if (localData) {
+            fetchPromise.then(snapshot => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val() as AppData;
+                    localStorage.setItem(DATA_KEY, JSON.stringify(data));
+                }
+            }).catch(err => console.warn("Background sync failed", err));
+
+            return localData;
+        }
+
+        // If no local data, we MUST wait for Firebase
+        const snapshot = await fetchPromise;
+        if (snapshot.exists()) {
+            const data = snapshot.val() as AppData;
+            localStorage.setItem(DATA_KEY, JSON.stringify(data));
+            return data;
+        }
+    } catch (error) {
+        console.warn("Offline or Firebase error", error);
+    }
+
+    return localData || initialData;
 };
 
 export const saveData = async (data: AppData): Promise<void> => {

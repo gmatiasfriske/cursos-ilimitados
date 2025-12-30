@@ -7,7 +7,11 @@ import Button from './UI/Button';
 import Input from './UI/Input';
 import PasswordModal from './UI/PasswordModal';
 import ConfirmModal from './UI/ConfirmModal';
-import { FaTrash, FaArrowUp, FaArrowDown, FaPlus, FaChevronDown, FaChevronRight, FaTimes } from 'react-icons/fa';
+import {
+    FaTrash, FaArrowUp, FaArrowDown, FaPlus, FaChevronDown, FaChevronRight, FaTimes,
+    FaFilePdf, FaBookOpen, FaMusic, FaLink
+} from 'react-icons/fa';
+import { MdQuiz } from 'react-icons/md';
 
 // Simple ID generator
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -17,12 +21,15 @@ interface AdminModalProps {
     onClose: () => void;
     data: AppData;
     onSave: (data: AppData) => void;
+    setIsAdmin: (isAdmin: boolean) => void;
+    navigate: (path: string) => void;
 }
 
-const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave, setIsAdmin, navigate }) => {
+    const isAdminMode = localStorage.getItem('is_admin') === 'true';
+    const [isAuthenticated, setIsAuthenticated] = useState(isAdminMode);
     const [editData, setEditData] = useState<AppData>(JSON.parse(JSON.stringify(data)));
-    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [showPasswordModal, setShowPasswordModal] = useState(!isAdminMode);
 
     // Collapsible states
     const [expandedCourses, setExpandedCourses] = useState<Record<string, boolean>>({});
@@ -51,6 +58,7 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
     const handlePasswordSubmit = (pass: string) => {
         if (pass === '..') {
             setIsAuthenticated(true);
+            setIsAdmin(true);
             setShowPasswordModal(false);
         } else {
             alert('Senha incorreta');
@@ -154,6 +162,33 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                                 return {
                                     ...m,
                                     lessons: [...m.lessons, { id: generateId(), title: 'Nova Aula', videoUrl: '' }]
+                                };
+                            }
+                            return m;
+                        })
+                    };
+                }
+                return c;
+            })
+        });
+    };
+
+    const addLibrary = (courseId: string, moduleId: string) => {
+        setEditData({
+            ...editData,
+            courses: editData.courses.map(c => {
+                if (c.id === courseId) {
+                    return {
+                        ...c,
+                        modules: c.modules.map(m => {
+                            if (m.id === moduleId) {
+                                return {
+                                    ...m,
+                                    lessons: [...m.lessons, {
+                                        id: generateId(),
+                                        title: 'Biblioteca de Materiais',
+                                        contents: [{ id: generateId(), type: 'pdf', title: 'Novo PDF', url: '' }]
+                                    }]
                                 };
                             }
                             return m;
@@ -369,6 +404,109 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
         });
     };
 
+    const addContentToLesson = (courseId: string, moduleId: string, lessonId: string) => {
+        setEditData({
+            ...editData,
+            courses: editData.courses.map(c => {
+                if (c.id === courseId) {
+                    return {
+                        ...c,
+                        modules: c.modules.map(m => {
+                            if (m.id === moduleId) {
+                                return {
+                                    ...m,
+                                    lessons: m.lessons.map(l => {
+                                        if (l.id === lessonId) {
+                                            return {
+                                                ...l,
+                                                contents: [...(l.contents || []), {
+                                                    id: generateId(),
+                                                    type: 'pdf',
+                                                    title: '',
+                                                    url: ''
+                                                }]
+                                            };
+                                        }
+                                        return l;
+                                    })
+                                };
+                            }
+                            return m;
+                        })
+                    };
+                }
+                return c;
+            })
+        });
+    };
+
+    const updateContentInLesson = (courseId: string, moduleId: string, lessonId: string, contentId: string, field: string, value: any) => {
+        setEditData({
+            ...editData,
+            courses: editData.courses.map(c => {
+                if (c.id === courseId) {
+                    return {
+                        ...c,
+                        modules: c.modules.map(m => {
+                            if (m.id === moduleId) {
+                                return {
+                                    ...m,
+                                    lessons: m.lessons.map(l => {
+                                        if (l.id === lessonId && l.contents) {
+                                            return {
+                                                ...l,
+                                                contents: l.contents.map(cont => {
+                                                    if (cont.id === contentId) {
+                                                        return { ...cont, [field]: value };
+                                                    }
+                                                    return cont;
+                                                })
+                                            };
+                                        }
+                                        return l;
+                                    })
+                                };
+                            }
+                            return m;
+                        })
+                    };
+                }
+                return c;
+            })
+        });
+    };
+
+    const removeContentFromLesson = (courseId: string, moduleId: string, lessonId: string, contentId: string) => {
+        setEditData({
+            ...editData,
+            courses: editData.courses.map(c => {
+                if (c.id === courseId) {
+                    return {
+                        ...c,
+                        modules: c.modules.map(m => {
+                            if (m.id === moduleId) {
+                                return {
+                                    ...m,
+                                    lessons: m.lessons.map(l => {
+                                        if (l.id === lessonId && l.contents) {
+                                            return {
+                                                ...l,
+                                                contents: l.contents.filter(cont => cont.id !== contentId)
+                                            };
+                                        }
+                                        return l;
+                                    })
+                                };
+                            }
+                            return m;
+                        })
+                    };
+                }
+                return c;
+            })
+        });
+    };
+
     // --- Reordering Logic ---
     const moveLesson = (courseId: string, moduleId: string, index: number, direction: 'up' | 'down') => {
         setEditData({
@@ -437,11 +575,14 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                         const isCourseExpanded = !!expandedCourses[course.id];
                         return (
                             <div key={course.id} style={{
-                                marginBottom: '0.5rem',
-                                backgroundColor: 'rgba(255,255,255,0.03)',
+                                marginBottom: '0.8rem',
+                                background: 'linear-gradient(180deg, rgba(30, 30, 40, 0.8) 0%, rgba(20, 20, 30, 0.9) 100%)',
                                 border: `1px solid ${theme.colors.border}`,
-                                padding: '0.5rem',
-                                borderRadius: theme.borderRadius.md
+                                padding: '0.6rem',
+                                borderRadius: theme.borderRadius.md,
+                                boxShadow: theme.shadows.sm,
+                                backdropFilter: 'blur(10px)',
+                                transition: 'all 0.2s ease'
                             }}>
                                 <div
                                     onClick={() => toggleCourse(course.id)}
@@ -466,8 +607,16 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                                 </div>
 
                                 {isCourseExpanded && (
-                                    <div style={{ animation: 'fadeIn 0.2s' }}>
-                                        <div style={{ display: 'grid', gap: '0.4rem', marginBottom: '1rem', borderBottom: `1px solid ${theme.colors.surfaceHighlight}`, paddingBottom: '1rem' }}>
+                                    <div style={{ animation: 'fadeIn 0.3s ease-in-out' }}>
+                                        <div style={{
+                                            display: 'grid',
+                                            gap: '0.6rem',
+                                            marginBottom: '1rem',
+                                            background: 'rgba(0,0,0,0.2)',
+                                            padding: '0.8rem',
+                                            borderRadius: theme.borderRadius.sm,
+                                            border: `1px solid ${theme.colors.border}`
+                                        }}>
                                             <div>
                                                 <label style={{ fontSize: '0.75rem', color: theme.colors.text.secondary, marginBottom: '2px', display: 'block' }}>Nome do Curso</label>
                                                 <Input
@@ -486,17 +635,43 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                                                     style={{ padding: '0.4rem', fontSize: '0.8rem' }}
                                                 />
                                             </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', paddingTop: '0.5rem' }}>
-                                                <label style={{ color: theme.colors.text.secondary, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.2rem', paddingTop: '0.5rem' }}>
+                                                <label style={{ color: theme.colors.text.secondary, fontSize: theme.typography.sizes.small, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                                                     <input
                                                         type="checkbox"
                                                         checked={!!course.isVip}
                                                         onChange={e => updateCourse(course.id, 'isVip', e.target.checked)}
-                                                        style={{ width: '16px', height: '16px' }}
+                                                        style={{ width: '16px', height: '16px', accentColor: theme.colors.primary }}
                                                     />
-                                                    Curso VIP (Requer Senha Especial)
+                                                    Curso VIP
+                                                </label>
+
+                                                <label style={{ color: theme.colors.text.secondary, fontSize: theme.typography.sizes.small, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={!!course.examEnabled}
+                                                        onChange={e => updateCourse(course.id, 'examEnabled', e.target.checked)}
+                                                        style={{ width: '16px', height: '16px', accentColor: theme.colors.primary }}
+                                                    />
+                                                    Ativar Prova Especial
                                                 </label>
                                             </div>
+
+                                            {course.examEnabled && (
+                                                <div style={{ marginTop: '0.8rem' }}>
+                                                    <Button
+                                                        variant="primary"
+                                                        onClick={() => {
+                                                            // Close modal and navigate
+                                                            onClose();
+                                                            navigate(`/admin/exams/${course.id}`);
+                                                        }}
+                                                        style={{ fontSize: theme.typography.sizes.small, padding: '0.4rem 1rem' }}
+                                                    >
+                                                        <MdQuiz style={{ marginRight: '8px' }} /> Gerenciar Perguntas da Prova
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* Modules */}
@@ -511,7 +686,14 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                                             {course.modules.map(module => {
                                                 const isModuleExpanded = !!expandedModules[module.id];
                                                 return (
-                                                    <div key={module.id} style={{ marginBottom: '0.8rem', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: theme.borderRadius.sm, border: `1px solid ${isModuleExpanded ? theme.colors.surfaceHighlight : 'transparent'}` }}>
+                                                    <div key={module.id} style={{
+                                                        marginBottom: '0.5rem',
+                                                        background: 'rgba(255,255,255,0.03)',
+                                                        borderRadius: theme.borderRadius.sm,
+                                                        border: `1px solid ${isModuleExpanded ? theme.colors.primary : 'rgba(255,255,255,0.05)'}`,
+                                                        overflow: 'hidden',
+                                                        transition: 'border-color 0.2s'
+                                                    }}>
                                                         <div
                                                             onClick={() => toggleModule(module.id)}
                                                             style={{
@@ -543,12 +725,13 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                                                                     <div key={lesson.id} style={{
                                                                         display: 'flex',
                                                                         flexDirection: 'column',
-                                                                        gap: '0.4rem',
-                                                                        marginBottom: '0.6rem',
-                                                                        backgroundColor: 'rgba(255,255,255,0.03)',
-                                                                        padding: '0.6rem',
-                                                                        borderRadius: '4px',
-                                                                        border: `1px solid ${lesson.activity ? 'rgba(99, 102, 241, 0.2)' : 'transparent'}`
+                                                                        gap: '0.5rem',
+                                                                        marginBottom: '0.4rem',
+                                                                        background: lesson.activity ? 'rgba(99, 102, 241, 0.05)' : 'rgba(255,255,255,0.03)', // Subtle highlight for activities
+                                                                        padding: '0.5rem',
+                                                                        borderRadius: '6px',
+                                                                        border: `1px solid ${lesson.activity ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)'}`,
+                                                                        transition: 'background 0.2s'
                                                                     }}>
                                                                         <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                                                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -653,6 +836,50 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                                                                                 })()}
                                                                             </div>
                                                                         )}
+
+                                                                        {/* Conteúdos (PDF, EPUB, MP3, etc) */}
+                                                                        <div style={{ paddingLeft: '20px', marginTop: '0.4rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.4rem' }}>
+                                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                                                                                <label style={{ fontSize: '0.7rem', color: theme.colors.text.secondary, fontWeight: 700 }}>MATERIAIS DE APOIO:</label>
+                                                                                <Button variant="ghost" onClick={() => addContentToLesson(course.id, module.id, lesson.id)} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>+ Adicionar</Button>
+                                                                            </div>
+
+                                                                            <div style={{ display: 'grid', gap: '0.4rem' }}>
+                                                                                {(lesson.contents || []).map(content => (
+                                                                                    <div key={content.id} style={{ display: 'grid', gridTemplateColumns: 'auto auto 1fr 1fr auto', gap: '0.4rem', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem', borderRadius: '4px' }}>
+                                                                                        <div style={{ width: '16px', display: 'flex', justifyContent: 'center' }}>
+                                                                                            {content.type === 'pdf' && <FaFilePdf size={12} color="#ff4444" />}
+                                                                                            {content.type === 'epub' && <FaBookOpen size={12} color="#4ade80" />}
+                                                                                            {content.type === 'mp3' && <FaMusic size={12} color="#60a5fa" />}
+                                                                                            {content.type === 'link' && <FaLink size={12} color="#fbbf24" />}
+                                                                                        </div>
+                                                                                        <select
+                                                                                            value={content.type}
+                                                                                            onChange={e => updateContentInLesson(course.id, module.id, lesson.id, content.id, 'type', e.target.value)}
+                                                                                            style={{ background: 'rgba(0,0,0,0.3)', color: 'white', border: 'none', borderRadius: '2px', fontSize: '0.7rem', padding: '0.1rem' }}
+                                                                                        >
+                                                                                            <option value="pdf">PDF</option>
+                                                                                            <option value="epub">EPUB</option>
+                                                                                            <option value="mp3">MP3</option>
+                                                                                            <option value="link">Link</option>
+                                                                                        </select>
+                                                                                        <Input
+                                                                                            value={content.title}
+                                                                                            placeholder="Título do material"
+                                                                                            onChange={e => updateContentInLesson(course.id, module.id, lesson.id, content.id, 'title', e.target.value)}
+                                                                                            style={{ padding: '0.15rem 0.3rem', fontSize: '0.7rem' }}
+                                                                                        />
+                                                                                        <Input
+                                                                                            value={content.url}
+                                                                                            placeholder="URL ou ID Drive"
+                                                                                            onChange={e => updateContentInLesson(course.id, module.id, lesson.id, content.id, 'url', e.target.value)}
+                                                                                            style={{ padding: '0.15rem 0.3rem', fontSize: '0.7rem' }}
+                                                                                        />
+                                                                                        <button onClick={() => removeContentFromLesson(course.id, module.id, lesson.id, content.id)} style={{ background: 'none', border: 'none', color: '#ff4444', padding: '2px', cursor: 'pointer' }}><FaTrash size={10} /></button>
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 ))}
                                                                 <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -668,7 +895,14 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                                                                         onClick={() => addActivity(course.id, module.id)}
                                                                         style={{ flex: 1, fontSize: '0.75rem', padding: '0.4rem', border: `1px dashed ${theme.colors.primary}`, color: theme.colors.primary, borderRadius: '4px' }}
                                                                     >
-                                                                        + Ad Atividade
+                                                                        + Atividade
+                                                                    </Button>
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        onClick={() => addLibrary(course.id, module.id)}
+                                                                        style={{ flex: 1, fontSize: '0.75rem', padding: '0.4rem', border: `1px dashed ${theme.colors.secondary}`, color: theme.colors.secondary, borderRadius: '4px' }}
+                                                                    >
+                                                                        + Materiais
                                                                     </Button>
                                                                 </div>
                                                             </div>
@@ -683,7 +917,14 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, data, onSave }
                         );
                     })}
 
-                    <div style={{ position: 'sticky', bottom: '-1.5rem', margin: '0 -1.5rem -1.5rem -1.5rem', padding: '1rem', backgroundColor: '#1E1E1E', borderTop: `1px solid ${theme.colors.border}`, textAlign: 'right' }}>
+                    <div style={{
+                        position: 'sticky', bottom: '-1.5rem', margin: '0 -1.5rem -1.5rem -1.5rem', padding: '1rem',
+                        background: 'rgba(15, 15, 20, 0.95)',
+                        borderTop: `1px solid ${theme.colors.border}`,
+                        textAlign: 'right',
+                        backdropFilter: 'blur(10px)',
+                        boxShadow: '0 -4px 10px rgba(0,0,0,0.3)'
+                    }}>
                         <Button
                             onClick={handleSaveAndClose}
                             variant="success"

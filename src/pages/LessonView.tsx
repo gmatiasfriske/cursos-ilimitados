@@ -1,25 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { App } from '@capacitor/app';
 import type { Course, Lesson } from '../types';
 import { theme } from '../theme';
-import { convertToDirectLink } from '../services/driveUtils';
+import { convertToDirectLink, convertToDownloadLink } from '../services/driveUtils';
 import { correctAndOrganizeNotes } from '../services/aiService';
 import { savePublicNote, getPublicNotes, type PublicNote, deletePublicNote } from '../services/dataService';
-import { downloadVideo, deleteVideo, getLocalVideoUrl, isPlatformNative } from '../services/videoService';
-import { checkPermissions } from '../services/permissions';
+import { deleteVideo, getLocalVideoUrl, isPlatformNative } from '../services/videoService';
+import { getLocalMaterialUrl, downloadMaterial, deleteMaterial } from '../services/materialService';
+
 import Button from '../components/UI/Button';
 import ConfirmationModal from '../components/UI/ConfirmationModal';
 import {
-    FaChevronLeft, FaCheckCircle, FaRegCircle,
-    FaMagic, FaStepBackward, FaStepForward, FaBold, FaItalic,
-    FaUnderline, FaListUl, FaEraser, FaCloudUploadAlt, FaUsers,
-    FaPlus, FaTimes, FaStickyNote, FaCopy, FaTrash, FaArrowDown, FaSpinner,
-    FaToggleOn, FaToggleOff
+    FaTrash, FaChevronLeft, FaPlay, FaTimes, FaDownload, FaTrophy, FaCopy,
+    FaMagic, FaUsers, FaCloudUploadAlt, FaToggleOn, FaToggleOff, FaBold, FaItalic, FaUnderline, FaListUl, FaHighlighter, FaEraser, FaSpinner, FaCheckCircle,
+    FaRegCircle, FaStepBackward, FaStepForward, FaFilePdf, FaBookOpen, FaMusic, FaLink, FaStickyNote, FaArrowUp, FaPlus, FaArrowDown
 } from 'react-icons/fa';
+import { MdScreenRotation } from 'react-icons/md';
+
+
+
+
+// PDF Viewer
+import { Viewer, Worker } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+
+// EPUB Viewer
+import { ReactReader } from 'react-reader';
 
 interface LessonViewProps {
     courses: Course[];
+    isAdmin?: boolean;
 }
 
 interface NoteTab {
@@ -28,7 +41,13 @@ interface NoteTab {
     content: string;
 }
 
-const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
+const ToolbarBtn: React.FC<{ onClick: () => void, icon: React.ReactNode }> = ({ onClick, icon }) => (
+    <button onMouseDown={(e) => { e.preventDefault(); onClick(); }} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.7)', cursor: 'pointer', padding: '0.3rem', borderRadius: '4px' }}>
+        {icon}
+    </button>
+);
+
+const LessonView: React.FC<LessonViewProps> = ({ courses, isAdmin }) => {
     const { courseId, lessonId } = useParams<{ courseId: string, lessonId: string }>();
     const navigate = useNavigate();
 
@@ -38,15 +57,17 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
     const [prevLessonId, setPrevLessonId] = useState<string | null>(null);
     const [nextLessonId, setNextLessonId] = useState<string | null>(null);
 
+
     // Video State
     const [localVideoSrc, setLocalVideoSrc] = useState<string | null>(null);
     const [isDownloading, setIsDownloading] = useState(false);
-    const isDownloadingRef = useRef(false);
     const [isSticky, setIsSticky] = useState(() => localStorage.getItem('video_sticky') !== 'false');
     const [videoHeight, setVideoHeight] = useState(() => {
         const saved = localStorage.getItem('video_height');
-        return saved ? parseInt(saved) : 400;
+        return saved ? Number(saved) : (window.innerWidth * 9 / 16); // Default to 16:9
     });
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [playbackRate, setPlaybackRate] = useState(1);
     const [isResizing, setIsResizing] = useState(false);
     const resizeStartY = useRef(0);
     const resizeStartHeight = useRef(400);
@@ -72,11 +93,37 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         const watchedList = JSON.parse(localStorage.getItem('watched_lessons') || '[]');
         return watchedList.includes(String(lessonId));
     });
-    const [userAnswers, setUserAnswers] = useState<Record<string, number>>({});
+    const [userAnswers, setUserAnswers] = useState<Record<string, number>>(() => {
+        const saved = localStorage.getItem(`quiz_answers_${courseId}_${lessonId}`);
+        return saved ? JSON.parse(saved) : {};
+    });
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [showActivitySummary, setShowActivitySummary] = useState(false);
+    const [showActivitySummary, setShowActivitySummary] = useState(() => {
+        return localStorage.getItem(`quiz_finished_${courseId}_${lessonId}`) === 'true';
+    });
+    const [viewingContent, setViewingContent] = useState<{ url: string, type: string, title: string, content?: string } | null>(null);
+    const [showAiToast, setShowAiToast] = useState(false);
+    const [draggedTabId, setDraggedTabId] = useState<string | null>(null);
+    const [renamingTab, setRenamingTab] = useState<{ id: string, title: string } | null>(null);
+    const [renameValue, setRenameValue] = useState('');
+    const lastClickRef = useRef<{ id: string, time: number }>({ id: '', time: 0 });
+    const dragTimeoutRef = useRef<any>(null);
+    const [isDragMoving, setIsDragMoving] = useState(false);
+    const dragStartPos = useRef({ x: 0, y: 0 });
+    const dragCurrentX = useRef(0);
+    const [epubLocation, setEpubLocation] = useState<string | number>(0);
+    const [localMaterialUrls, setLocalMaterialUrls] = useState<Record<string, string>>({});
+    const [downloadingMaterials, setDownloadingMaterials] = useState<Record<string, boolean>>({});
+    const [isPreparingId, setIsPreparingId] = useState<string | null>(null);
+    const defaultLayoutPluginInstance = defaultLayoutPlugin();
     const pageTimeRef = useRef(0); // Time spent on page in seconds
+    // Determine library mode: No video URL OR we are forcing library view (if we had a flag)
+    // But currently isLibrary means "No Video URL AND has contents". 
+    // If we have videoUrl, isLibrary is false.
+    const isLibrary = (!lesson?.videoUrl || lesson?.videoUrl.trim() === "") && lesson?.contents && lesson?.contents.length > 0 && !lesson?.activity;
 
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isForcedLandscape, setIsForcedLandscape] = useState(false);
     // Modal State
     const [modalConfig, setModalConfig] = useState<{
         isOpen: boolean;
@@ -91,7 +138,9 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
 
     // Editor Ref
     const editorRef = useRef<HTMLDivElement>(null);
-    const currentContentRef = useRef('');
+    const lastSavedContent = useRef('');
+    const [consolidationActiveTabs, setConsolidationActiveTabs] = useState<Record<string, string>>({});
+    const [pendingJumpLesson, setPendingJumpLesson] = useState<{ id: string, title: string } | null>(null);
 
     // Find Data
     useEffect(() => {
@@ -139,18 +188,57 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         setUserAnswers({});
         setCurrentQuestionIndex(0);
         setShowActivitySummary(false);
-    }, [lessonId]);
+    }, [lessonId, lesson]);
+
+    // Handle Orientation on Fullscreen
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            const fsElement = document.fullscreenElement || (document as any).webkitFullscreenElement || (document as any).mozFullScreenElement || (document as any).msFullscreenElement;
+            const isFs = !!fsElement;
+            setIsFullscreen(isFs);
+
+            if (isFs) {
+                if (window.screen.orientation && (window.screen.orientation as any).lock) {
+                    (window.screen.orientation as any).lock('landscape').catch(() => { });
+                }
+            } else {
+                if (window.screen.orientation && window.screen.orientation.unlock) {
+                    window.screen.orientation.unlock();
+                }
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+        };
+    }, []);
 
     // Handle Android Back Button
     useEffect(() => {
-        const handleBackButton = App.addListener('backButton', () => {
-            navigate(`/course/${courseId}`, { replace: true });
-        });
-
-        return () => {
-            handleBackButton.then((h: any) => h.remove());
+        const setupListener = async () => {
+            const listener = await App.addListener('backButton', () => {
+                // FORCE SAVE before navigating back
+                if (editorRef.current) {
+                    const currentContent = editorRef.current.innerHTML;
+                    setTabs(prev => {
+                        const newTabs = prev.map(t => t.id === activeTabId ? { ...t, content: currentContent } : t);
+                        localStorage.setItem(TABS_KEY, JSON.stringify(newTabs));
+                        return newTabs;
+                    });
+                }
+                navigate(`/course/${courseId}`, { replace: true });
+            });
+            return listener;
         };
-    }, [navigate, courseId]);
+
+        const listenerPromise = setupListener();
+        return () => {
+            listenerPromise.then(l => l.remove());
+        };
+    }, [navigate, courseId, activeTabId, TABS_KEY]);
 
     // Check Local Video
     useEffect(() => {
@@ -161,6 +249,58 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
             });
         }
     }, [lessonId]);
+
+    const loadLocalMaterials = async () => {
+        if (!lesson?.contents) return;
+        const urls: Record<string, string> = {};
+        for (const content of lesson.contents) {
+            const local = await getLocalMaterialUrl(content.id, content.type);
+            if (local) urls[content.id] = local;
+        }
+        setLocalMaterialUrls(urls);
+    };
+
+    useEffect(() => {
+        loadLocalMaterials();
+    }, [lesson]);
+
+    const handleDownloadMaterial = async (content: any) => {
+        if (!isPlatformNative()) {
+            window.open(convertToDirectLink(content.url), '_blank');
+            return;
+        }
+        setDownloadingMaterials(prev => ({ ...prev, [content.id]: true }));
+        try {
+            await downloadMaterial(content.id, content.url, content.type);
+            await loadLocalMaterials();
+            // Removed modal confirmation, showing a small toast-like effect could be added if needed,
+            // but for now, just following the request to remove the confirmation modal.
+        } catch (e) {
+            setModalConfig({
+                isOpen: true,
+                title: "Erro",
+                message: "Falha ao baixar material.",
+                onConfirm: () => setModalConfig(prev => ({ ...prev, isOpen: false }))
+            });
+        } finally {
+            setDownloadingMaterials(prev => ({ ...prev, [content.id]: false }));
+        }
+    };
+
+    const handleDeleteMaterial = async (content: any) => {
+        setModalConfig({
+            isOpen: true,
+            title: "Excluir Download",
+            message: `Tem certeza que deseja excluir o arquivo local de "${content.title}"?`,
+            confirmText: "Excluir",
+            isDestructive: true,
+            onConfirm: async () => {
+                await deleteMaterial(content.id, content.type);
+                await loadLocalMaterials();
+                setModalConfig(prev => ({ ...prev, isOpen: false }));
+            }
+        });
+    };
 
     // Track time on page and mark as watched after 2 minutes (for iframes)
     useEffect(() => {
@@ -200,7 +340,7 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         setTabs(initialTabs);
         if (initialTabs.length > 0) {
             setActiveTabId(initialTabs[0].id);
-            currentContentRef.current = initialTabs[0].content;
+            lastSavedContent.current = initialTabs[0].content;
             if (editorRef.current) editorRef.current.innerHTML = initialTabs[0].content;
         }
     }, [courseId, lessonId, TABS_KEY]);
@@ -211,13 +351,15 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         if (lessonId && watchedList.includes(lessonId)) setIsWatched(true);
     }, [lessonId]);
 
-    // Update Editor content when Tab switches
+    // Update Editor content when Tab switches or content changes externally
     useEffect(() => {
         const tab = tabs.find(t => t.id === activeTabId);
         if (tab && editorRef.current) {
-            if (editorRef.current.innerHTML !== tab.content) {
+            // Only update DOM if the content in state is different from what we last saved
+            // This prevents focus loss during typing (React re-render vs DOM innerHTML)
+            if (tab.content !== lastSavedContent.current) {
                 editorRef.current.innerHTML = tab.content;
-                currentContentRef.current = tab.content;
+                lastSavedContent.current = tab.content;
             }
         }
     }, [activeTabId, tabs]);
@@ -225,14 +367,15 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
     // ---------------- Handlers ----------------
 
     const saveCurrentTab = (newContent: string) => {
-        currentContentRef.current = newContent;
+        lastSavedContent.current = newContent;
         setTabs(prev => {
             const newTabs = prev.map(t => t.id === activeTabId ? { ...t, content: newContent } : t);
             localStorage.setItem(TABS_KEY, JSON.stringify(newTabs));
             return newTabs;
         });
         setIsSaving(true);
-        setTimeout(() => setIsSaving(false), 800);
+        // Clear indicator after a delay
+        setTimeout(() => setIsSaving(false), 2000);
     };
 
     const handleCreateTab = (title: string = 'Nova Nota', content: string = '') => {
@@ -260,65 +403,147 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         setActiveTabId(nextActive);
     };
 
+    const handleMakeMainTab = (e: React.MouseEvent, tabId: string) => {
+        e.stopPropagation();
+        const tabToMove = tabs.find(t => t.id === tabId);
+        if (!tabToMove) return;
+
+        const otherTabs = tabs.filter(t => t.id !== tabId);
+        const newTabs = [tabToMove, ...otherTabs];
+
+        setTabs(newTabs);
+        localStorage.setItem(TABS_KEY, JSON.stringify(newTabs));
+        setActiveTabId(tabId);
+    };
+
+    const handleTabRenameStart = (tab: NoteTab) => {
+        setRenamingTab(tab);
+        setRenameValue(tab.title);
+    };
+
+    const handleTabClick = (tabId: string) => {
+        if (isDragMoving) return;
+        const now = Date.now();
+        // Custom 600ms window for "double click"
+        if (lastClickRef.current.id === tabId && (now - lastClickRef.current.time) < 600) {
+            const tab = tabs.find(t => t.id === tabId);
+            if (tab) handleTabRenameStart(tab);
+            lastClickRef.current = { id: '', time: 0 };
+            return;
+        }
+        lastClickRef.current = { id: tabId, time: now };
+
+        setActiveTabId(tabId);
+        setShowCommunity(false);
+    };
+
+    const handleTabPressStart = (e: React.MouseEvent | React.TouchEvent, id: string) => {
+        const pos = 'touches' in e ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
+        dragStartPos.current = pos;
+        dragCurrentX.current = pos.x;
+
+        dragTimeoutRef.current = setTimeout(() => {
+            setDraggedTabId(id);
+            setIsDragMoving(true);
+            if (navigator.vibrate) navigator.vibrate(30);
+        }, 300); // 0.3s hold to start moving
+    };
+
+    const handleTabPressMove = (e: React.MouseEvent | React.TouchEvent) => {
+        const pos = 'touches' in e ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
+
+        if (!draggedTabId) {
+            const dx = pos.x - dragStartPos.current.x;
+            const dy = pos.y - dragStartPos.current.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > 10) clearTimeout(dragTimeoutRef.current);
+            return;
+        }
+
+        e.preventDefault();
+        dragCurrentX.current = pos.x;
+
+        // Find target tab to swap
+        const element = document.elementFromPoint(pos.x, dragStartPos.current.y);
+        const targetTab = element?.closest('[data-tab-id]') as HTMLElement;
+        const targetId = targetTab?.getAttribute('data-tab-id');
+
+        if (targetId && targetId !== draggedTabId) {
+            handleTabDragEnterForced(targetId);
+        }
+    };
+
+    const handleTabPressEnd = () => {
+        clearTimeout(dragTimeoutRef.current);
+        setDraggedTabId(null);
+        setTimeout(() => setIsDragMoving(false), 50);
+    };
+
+    const handleTabDragEnterForced = (targetId: string) => {
+        if (!draggedTabId || draggedTabId === targetId) return;
+        setTabs(prev => {
+            const fromIdx = prev.findIndex(t => t.id === draggedTabId);
+            const toIdx = prev.findIndex(t => t.id === targetId);
+            if (fromIdx === -1 || toIdx === -1) return prev;
+            const newTabs = [...prev];
+            const [moved] = newTabs.splice(fromIdx, 1);
+            newTabs.splice(toIdx, 0, moved);
+            localStorage.setItem(TABS_KEY, JSON.stringify(newTabs));
+            return newTabs;
+        });
+    };
+
+    const confirmRename = () => {
+        if (renamingTab && renameValue.trim()) {
+            setTabs(prev => {
+                const updated = prev.map(t => t.id === renamingTab.id ? { ...t, title: renameValue.trim() } : t);
+                localStorage.setItem(TABS_KEY, JSON.stringify(updated));
+                return updated;
+            });
+            setRenamingTab(null);
+        }
+    };
+
     const handleDownloadVideo = async () => {
-        if (!lesson) return;
+        setIsDownloading(false);
+    };
 
-        // Cancel logic
-        if (isDownloading) {
-            isDownloadingRef.current = false;
-            setIsDownloading(false);
-            return;
-        }
+    const handleMagicOrganize = async () => {
+        if (!lastSavedContent.current.trim()) return;
 
-        setIsDownloading(true);
-        isDownloadingRef.current = true;
+        // Get selected text
+        const selection = window.getSelection();
+        const selectedText = selection?.toString().trim() || '';
 
-        const hasPerm = await checkPermissions();
-        if (!hasPerm) {
-            setModalConfig({
-                isOpen: true,
-                title: 'Permissão Negada',
-                message: 'É necessário conceder permissão de armazenamento para baixar vídeos.',
-                confirmText: 'Entendido',
-                onConfirm: () => setModalConfig(prev => ({ ...prev, isOpen: false }))
-            });
-            setIsDownloading(false);
-            return;
-        }
+        setIsOrganizing(true);
 
-        try {
-            if (!lesson.videoUrl) throw new Error('Sem URL de vídeo');
-            await downloadVideo(lessonId!, lesson.videoUrl);
-            if (!isDownloadingRef.current) return; // Was cancelled
+        if (selectedText) {
+            // Work on selection only
+            const html = await correctAndOrganizeNotes(selectedText);
+            document.execCommand('insertHTML', false, html);
+            if (editorRef.current) {
+                saveCurrentTab(editorRef.current.innerHTML);
+            }
+        } else {
+            // Work on all text
+            const text = editorRef.current?.innerText || "";
+            const html = await correctAndOrganizeNotes(text);
 
-            const local = await getLocalVideoUrl(lessonId!);
-            setLocalVideoSrc(local);
-            setModalConfig({
-                isOpen: true,
-                title: 'Sucesso',
-                message: 'Vídeo baixado para uso offline!',
-                confirmText: 'Legal!',
-                onConfirm: () => setModalConfig(prev => ({ ...prev, isOpen: false }))
-            });
-        } catch (e) {
-            if (isDownloadingRef.current) {
-                setModalConfig({
-                    isOpen: true,
-                    title: 'Erro no Download',
-                    message: 'Erro ao baixar o vídeo. Certifique-se de estar usando o app nativo e ter conexão com a internet.',
-                    confirmText: 'OK',
-                    onConfirm: () => setModalConfig(prev => ({ ...prev, isOpen: false }))
-                });
+            if (editorRef.current) {
+                editorRef.current.innerHTML = html;
+                saveCurrentTab(html);
             }
         }
-        setIsDownloading(false);
+        setIsOrganizing(false);
+        setShowAiToast(true);
+        setTimeout(() => setShowAiToast(false), 3000);
     };
 
     const handleDeleteVideo = async () => {
         setModalConfig({
             isOpen: true,
             title: 'Excluir Download',
-            message: 'Tem certeza que deseja remover este vídeo do seu dispositivo?',
+            message: 'Tem certeza que deseja remover este Vídeo do seu dispositivo?',
             isDestructive: true,
             onConfirm: async () => {
                 await deleteVideo(lessonId!);
@@ -346,30 +571,38 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
         resizeStartY.current = clientY;
         resizeStartHeight.current = videoHeight;
-        e.preventDefault();
+
+        // Disable body scroll while resizing
+        document.body.style.overflow = 'hidden';
+        document.body.style.userSelect = 'none';
     };
 
     useEffect(() => {
         if (!isResizing) return;
 
         const handleMove = (e: MouseEvent | TouchEvent) => {
+            // Prevent scrolling on mobile
+            if (e.cancelable) e.preventDefault();
+
             const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
             const delta = clientY - resizeStartY.current;
-            // Drag down = smaller, Drag up = larger (inverted for natural feel)
-            // Min 80px, Max based on screen width 16:9
-            const maxH = Math.min(400, window.innerWidth * 9 / 16);
-            const newHeight = Math.max(80, Math.min(maxH, resizeStartHeight.current + delta));
+
+            // Limit height: min 120px, max is EXACTLY 16:9 of the screen width
+            const maxWidth169 = window.innerWidth * 9 / 16;
+            const newHeight = Math.max(120, Math.min(maxWidth169, resizeStartHeight.current + delta));
             setVideoHeight(newHeight);
         };
 
         const handleEnd = () => {
             setIsResizing(false);
-            localStorage.setItem('video_height', String(videoHeight));
+            document.body.style.overflow = '';
+            document.body.style.userSelect = '';
         };
 
+        // Important: use { passive: false } for touchmove to allow e.preventDefault()
         document.addEventListener('mousemove', handleMove);
         document.addEventListener('mouseup', handleEnd);
-        document.addEventListener('touchmove', handleMove);
+        document.addEventListener('touchmove', handleMove, { passive: false });
         document.addEventListener('touchend', handleEnd);
 
         return () => {
@@ -378,7 +611,16 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
             document.removeEventListener('touchmove', handleMove);
             document.removeEventListener('touchend', handleEnd);
         };
-    }, [isResizing, videoHeight]);
+    }, [isResizing]);
+
+    // Save height when it changes (debounced or on end)
+    useEffect(() => {
+        if (!isResizing && videoHeight > 0) {
+            // Ensure we don't save a height larger than current screen allows
+            const maxH = window.innerWidth * 9 / 16;
+            localStorage.setItem('video_height', String(Math.min(videoHeight, maxH)));
+        }
+    }, [videoHeight, isResizing]);
 
     // --- Community Features ---
 
@@ -395,7 +637,7 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
             setModalConfig({
                 isOpen: true,
                 title: 'Ação Necessária',
-                message: 'Defina um nome na Home para poder compartilhar anotações e interagir com a comunidade.',
+                message: 'Defina um nome na Home para poder compartilhar Anotações e interagir com a comunidade.',
                 confirmText: 'Ir para Home',
                 cancelText: 'Depois',
                 onConfirm: () => {
@@ -408,7 +650,7 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
 
         setIsSharing(true);
         try {
-            await savePublicNote(lessonId || '', currentUser, currentContentRef.current);
+            await savePublicNote(lessonId || '', currentUser, lastSavedContent.current);
             setShowNoteToast(true);
             setTimeout(() => setShowNoteToast(false), 2000);
         } catch (e) {
@@ -423,10 +665,11 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         setIsSharing(false);
     };
 
-    const handleDeletePublicNote = async () => {
+    const handleDeletePublicNote = async (targetUser?: string) => {
         // Direct delete, no confirm
+        const userToDelete = targetUser || currentUser || '';
         try {
-            await deletePublicNote(lessonId || '', currentUser || '');
+            await deletePublicNote(lessonId || '', userToDelete);
             handleOpenCommunity();
         } catch (e) {
             setModalConfig({
@@ -439,59 +682,47 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
     };
 
     const handleImportNote = (note: PublicNote) => {
-        // Direct import, NO confirmation at all
+        // Direct import
         handleCreateTab(`Nota de ${note.user}`, note.content);
         setShowNoteToast(true);
         setTimeout(() => setShowNoteToast(false), 2000);
     };
 
+
+
     // --- Editor Commands ---
     const execCmd = (command: string, value?: string) => {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0 && selection.toString().trim() === "" && editorRef.current?.contains(selection.anchorNode)) {
+            // No selection: try to select the word at cursor
+            const range = selection.getRangeAt(0);
+            const node = range.startContainer;
+            const offset = range.startOffset;
+
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent || "";
+                let start = offset;
+                let end = offset;
+
+                // Find word boundaries
+                while (start > 0 && /\S/.test(text[start - 1])) start--;
+                while (end < text.length && /\S/.test(text[end])) end++;
+
+                if (start !== end) {
+                    const newRange = document.createRange();
+                    newRange.setStart(node, start);
+                    newRange.setEnd(node, end);
+                    selection.removeAllRanges();
+                    selection.addRange(newRange);
+                }
+            }
+        }
+
         document.execCommand(command, false, value);
         if (editorRef.current) {
             saveCurrentTab(editorRef.current.innerHTML);
             editorRef.current.focus();
         }
-    };
-
-    const handleMagicOrganize = async () => {
-        if (!currentContentRef.current.trim()) return;
-
-        // Get selected text
-        const selection = window.getSelection();
-        const selectedText = selection?.toString().trim() || '';
-
-        setModalConfig({
-            isOpen: true,
-            title: 'Organizar com IA',
-            message: selectedText
-                ? 'A IA irá corrigir e organizar o texto selecionado.'
-                : 'A IA irá corrigir e organizar toda a anotação. O conteúdo será alterado.',
-            isDestructive: false,
-            onConfirm: async () => {
-                setModalConfig(prev => ({ ...prev, isOpen: false }));
-                setIsOrganizing(true);
-
-                if (selectedText) {
-                    // Work on selection only
-                    const html = await correctAndOrganizeNotes(selectedText);
-                    document.execCommand('insertHTML', false, html);
-                    if (editorRef.current) {
-                        saveCurrentTab(editorRef.current.innerHTML);
-                    }
-                } else {
-                    // Work on all text
-                    const text = editorRef.current?.innerText || "";
-                    const html = await correctAndOrganizeNotes(text);
-
-                    if (editorRef.current) {
-                        editorRef.current.innerHTML = html;
-                        saveCurrentTab(html);
-                    }
-                }
-                setIsOrganizing(false);
-            }
-        });
     };
 
     const markAsWatched = (activityScore?: { score: number, total: number }) => {
@@ -519,6 +750,17 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         setIsWatched(!isWatched);
     };
 
+    // Persistence Effect for Quiz
+    useEffect(() => {
+        if (Object.keys(userAnswers).length > 0) {
+            localStorage.setItem(`quiz_answers_${courseId}_${lessonId}`, JSON.stringify(userAnswers));
+        }
+    }, [userAnswers, courseId, lessonId]);
+
+    useEffect(() => {
+        localStorage.setItem(`quiz_finished_${courseId}_${lessonId}`, showActivitySummary ? 'true' : 'false');
+    }, [showActivitySummary, courseId, lessonId]);
+
     const handleVideoTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
         if (isWatched) return;
         const target = e.currentTarget;
@@ -527,14 +769,48 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
         }
     };
 
+
+
+
+
     const handleOptionSelect = (questionId: string, index: number) => {
         if (userAnswers[questionId] !== undefined) return;
-
         setUserAnswers(prev => ({ ...prev, [questionId]: index }));
-
-        // Auto advance after short delay if correct?
-        // Or wait for user to click next.
     };
+
+    // --- Module Notes Aggregation ---
+    const currentModule = courses.find(c => c.id === courseId)?.modules.find(m => m.lessons.some(l => l.id === lessonId));
+    const allModuleGroups = React.useMemo(() => {
+        if (!currentModule) return [];
+        return currentModule.lessons
+            .map(l => {
+                const saved = localStorage.getItem(`note_tabs_${courseId}_${l.id}`);
+                if (!saved) return null;
+                try {
+                    const tabs = JSON.parse(saved);
+                    if (!tabs || tabs.length === 0) return null;
+                    // Check if any tab has content
+                    const hasContent = tabs.some((t: any) => t.content && t.content.trim() !== '');
+                    if (!hasContent) return null;
+                    return { lessonId: l.id, lessonTitle: l.title, tabs };
+                } catch (e) { return null; }
+            }).filter(Boolean) as { lessonId: string, lessonTitle: string, tabs: NoteTab[] }[];
+    }, [currentModule, courseId]);
+
+    // Initialize/Sync active tabs for consolidated view
+    useEffect(() => {
+        setConsolidationActiveTabs(prev => {
+            const next = { ...prev };
+            let changed = false;
+            allModuleGroups.forEach(group => {
+                if (!next[group.lessonId] || !group.tabs.some(t => t.id === next[group.lessonId])) {
+                    next[group.lessonId] = group.tabs[0].id;
+                    changed = true;
+                }
+            });
+            return changed ? next : prev;
+        });
+    }, [allModuleGroups]);
 
     const handleNextQuestion = () => {
         if (!lesson?.activity) return;
@@ -557,20 +833,50 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
     }
 
     // Video Source Logic
-    const iframeSrc = lesson.videoUrl ? convertToDirectLink(lesson.videoUrl) : null;
+
 
     // Reusable Content Area (Video or Activity)
-    const MainContentArea = (
-        <div style={{
-            width: '100%',
-            aspectRatio: lesson.activity ? 'unset' : '16/9',
-            flex: lesson.activity ? 1 : 'unset',
-            backgroundColor: '#0a0a0a',
-            position: 'relative',
-            zIndex: 100,
-            display: 'flex',
-            flexDirection: 'column'
-        }}>
+    const MainContentArea = isLibrary ? null : (
+        <div
+            id="player-container"
+            className={(isForcedLandscape || (isFullscreen && window.innerHeight > window.innerWidth)) ? 'force-landscape-rotate' : ''}
+            style={{
+                width: '100%',
+                // When sticky, height is dynamic. When not, it's 16/9.
+                aspectRatio: lesson.activity ? 'unset' : (isSticky ? 'unset' : '16/9'),
+                height: lesson.activity ? '100%' : (isSticky ? `${videoHeight}px` : 'auto'),
+                backgroundColor: '#000',
+                position: 'relative', // Essential for absolute positioning of children
+                zIndex: isForcedLandscape ? 1000000 : 100,
+                overflow: 'hidden',
+                display: lesson.activity ? 'flex' : 'block'
+            }}>
+            {/* Manual Rotation Button */}
+            {!lesson.activity && !isLibrary && (
+                <button
+                    onClick={() => setIsForcedLandscape(!isForcedLandscape)}
+                    title="Rotacionar Vídeo"
+                    style={{
+                        position: 'absolute',
+                        bottom: '40px',
+                        right: '10px',
+                        zIndex: 1000,
+                        background: 'rgba(0,0,0,0.5)',
+                        border: 'none',
+                        color: isForcedLandscape ? theme.colors.primary : 'white',
+                        padding: '6px', // Reduced padding
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backdropFilter: 'blur(5px)',
+                        transition: 'all 0.3s'
+                    }}
+                >
+                    <MdScreenRotation size={16} /> {/* Reduced size from 20 to 16 (-20%) */}
+                </button>
+            )}
             {lesson.activity ? (() => {
                 // Ensure questions array exists (handle legacy data)
                 const activity = lesson.activity;
@@ -634,11 +940,17 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                                                     } else if (isSelected) {
                                                         borderColor = theme.colors.primary;
                                                     }
-
                                                     return (
                                                         <button
                                                             key={idx}
-                                                            onClick={() => handleOptionSelect(q.id, idx)}
+                                                            onClick={() => {
+                                                                handleOptionSelect(q.id, idx);
+                                                                // Auto-scroll logic
+                                                                setTimeout(() => {
+                                                                    const btn = document.getElementById(`next-btn-area`);
+                                                                    if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                                                }, 200);
+                                                            }}
                                                             disabled={showResult}
                                                             style={{
                                                                 padding: '0.75rem 1rem',
@@ -672,12 +984,30 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                                                         </button>
                                                     );
                                                 })}
-                                            </div>
+                                            </div >
+
+                                            <div id="next-btn-area" style={{ height: '10px' }} />
 
                                             {showResult && (
-                                                <div style={{ marginTop: '2rem', animation: 'fadeIn 0.3s' }}>
-                                                    <Button fullWidth onClick={handleNextQuestion} variant={selectedIdx === q.correctOptionIndex ? "success" : "secondary"}>
-                                                        {currentQuestionIndex < questions.length - 1 ? 'Próxima Questão' : 'Ver Resultados'}
+                                                <div style={{ marginTop: '1rem', animation: 'fadeIn 0.3s' }}>
+                                                    <Button fullWidth onClick={() => {
+                                                        if (currentQuestionIndex < questions.length - 1) {
+                                                            handleNextQuestion();
+                                                            // Scroll back up to question start
+                                                            setTimeout(() => {
+                                                                const top = document.getElementById('lesson-header-anchor');
+                                                                if (top) top.scrollIntoView({ behavior: 'smooth' });
+                                                            }, 100);
+                                                        } else {
+                                                            const correctCount = questions.filter(q => userAnswers[q.id] === q.correctOptionIndex).length;
+                                                            const total = questions.length;
+                                                            const savedScores = JSON.parse(localStorage.getItem('activity_scores') || '{}');
+                                                            savedScores[lessonId!] = { score: correctCount, total };
+                                                            localStorage.setItem('activity_scores', JSON.stringify(savedScores));
+                                                            setShowActivitySummary(true);
+                                                        }
+                                                    }} variant={selectedIdx === q.correctOptionIndex ? "success" : "secondary"}>
+                                                        {currentQuestionIndex < questions.length - 1 ? 'Próxima questão' : 'Ver resultados'}
                                                     </Button>
                                                 </div>
                                             )}
@@ -686,51 +1016,181 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                                 })()}
                             </>
                         ) : (
-                            <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s', padding: '1rem' }}>
-                                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
-                                    <FaCheckCircle size={40} color={theme.colors.success} />
+                            <div style={{ animation: 'fadeIn 0.5s ease-out', padding: '1rem' }}>
+                                {/* Detailed Report Section - Matching Special Exam Style */}
+                                <div style={{
+                                    textAlign: 'center',
+                                    padding: '1.5rem',
+                                    background: 'rgba(255,255,255,0.03)',
+                                    borderRadius: '12px',
+                                    border: `1px solid ${theme.colors.border}`,
+                                    marginBottom: '1.5rem'
+                                }}>
+                                    <FaTrophy size={40} color={questions.filter(q => userAnswers[q.id] === q.correctOptionIndex).length > questions.length / 2 ? '#fbbf24' : 'rgba(255,255,255,0.2)'} style={{ marginBottom: '1rem' }} />
+                                    <h2 style={{ fontSize: '1.8rem', fontWeight: 900, margin: '0 0 0.5rem 0' }}>
+                                        {(() => {
+                                            const correctCount = questions.filter(q => userAnswers[q.id] === q.correctOptionIndex).length;
+                                            const total = questions.length;
+                                            return total > 0 ? Math.round((correctCount / total) * 100) : 0;
+                                        })()}%
+                                    </h2>
+                                    <p style={{ color: theme.colors.text.secondary, fontSize: '0.9rem' }}>
+                                        {(() => {
+                                            const correctCount = questions.filter(q => userAnswers[q.id] === q.correctOptionIndex).length;
+                                            const total = questions.length;
+                                            return `Você acertou ${correctCount} de ${total} questões.`;
+                                        })()}
+                                    </p>
+
+                                    <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1.5rem' }}>
+                                        <div>
+                                            <div style={{ color: theme.colors.success, fontSize: '1.2rem', fontWeight: 800 }}>
+                                                {questions.filter(q => userAnswers[q.id] === q.correctOptionIndex).length}
+                                            </div>
+                                            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Acertos</div>
+                                        </div>
+                                        <div>
+                                            <div style={{ color: '#ef4444', fontSize: '1.2rem', fontWeight: 800 }}>
+                                                {questions.length - questions.filter(q => userAnswers[q.id] === q.correctOptionIndex).length}
+                                            </div>
+                                            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Erros</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Atividade Concluída!</h2>
-                                <p style={{ opacity: 0.7, marginBottom: '2rem' }}>
-                                    {(() => {
-                                        const correctCount = questions.filter(q => userAnswers[q.id] === q.correctOptionIndex).length;
-                                        const total = questions.length;
-                                        const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
-                                        if (percentage === 100) return "Excelente! Você acertou todas as questões.";
-                                        if (percentage >= 70) return `Bom trabalho! Você acertou ${correctCount} de ${total} questões.`;
-                                        return `Você acertou ${correctCount} de ${total} questões. Tente revisar os vídeos e fazer novamente!`;
-                                    })()}
-                                </p>
+
+                                <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '1rem' }}>RelatÃ³rio Detalhado</h3>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1.5rem' }}>
+                                    {questions.map((q, idx) => {
+                                        const uAnsIndex = userAnswers[q.id];
+                                        const isCorrect = uAnsIndex === q.correctOptionIndex;
+
+                                        return (
+                                            <div key={q.id} style={{
+                                                padding: '1rem',
+                                                background: 'rgba(0,0,0,0.2)',
+                                                borderRadius: '8px',
+                                                borderLeft: `4px solid ${isCorrect ? theme.colors.success : '#ef4444'}`
+                                            }}>
+                                                <p style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.6rem', opacity: 0.9 }}>
+                                                    {idx + 1}. {q.question}
+                                                </p>
+
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                                                    <div style={{ fontSize: '0.75rem', display: 'flex', gap: '8px' }}>
+                                                        <FaCheckCircle color={theme.colors.success} size={13} style={{ marginTop: '2px', flexShrink: 0 }} />
+                                                        <span>Resposta Correta: <b style={{ color: theme.colors.success }}>{q.options[q.correctOptionIndex]}</b></span>
+                                                    </div>
+
+                                                    {!isCorrect && (
+                                                        <div style={{ fontSize: '0.75rem', display: 'flex', gap: '8px' }}>
+                                                            <FaTimes color="#ef4444" size={13} style={{ marginTop: '2px', flexShrink: 0 }} />
+                                                            <span>Sua Escolha: <b style={{ color: '#ef4444' }}>{q.options[uAnsIndex] || 'Pulada'}</b></span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
                                 <Button fullWidth onClick={() => navigate(`/course/${courseId}`)}>Voltar ao Curso</Button>
-                                {questions.some(q => userAnswers[q.id] !== q.correctOptionIndex) && (
-                                    <Button variant="ghost" fullWidth style={{ marginTop: '0.5rem' }} onClick={() => { setShowActivitySummary(false); setCurrentQuestionIndex(0); setUserAnswers({}); }}>Tentar Novamente</Button>
-                                )}
+                                <Button variant="ghost" fullWidth style={{ marginTop: '0.5rem' }} onClick={() => { setShowActivitySummary(false); setCurrentQuestionIndex(0); setUserAnswers({}); }}>Tentar Novamente</Button>
                             </div>
-                        )}
+                        )
+                        }
                     </div>
                 );
             })() : (
                 localVideoSrc ? (
-                    <video
-                        src={localVideoSrc}
-                        style={{ width: '100%', height: '100%' }}
-                        controls
-                        title={lesson.title}
-                        onTimeUpdate={handleVideoTimeUpdate}
-                    />
-                ) : (
-                    iframeSrc ? (
-                        <iframe
-                            src={iframeSrc}
-                            style={{ width: '100%', height: '100%', border: 'none' }}
-                            allow="autoplay; encrypted-media; fullscreen"
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#000' }}>
+                        <video
+                            ref={videoRef}
+                            src={localVideoSrc}
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                            controls
+                            playsInline
+                            onTimeUpdate={handleVideoTimeUpdate}
                             title={lesson.title}
-                            allowFullScreen
                         />
-                    ) : <div style={{ color: 'white', padding: '2rem', textAlign: 'center' }}>Erro Video</div>
+                        {/* Speed Controller Overlay */}
+                        <div style={{
+                            position: 'absolute', top: '10px', right: '10px', zIndex: 10,
+                            display: 'flex', gap: '4px', background: 'rgba(0,0,0,0.6)',
+                            padding: '4px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)'
+                        }}>
+                            {[1, 1.25, 1.5, 1.75, 2].map(speed => (
+                                <button
+                                    key={speed}
+                                    onClick={() => {
+                                        if (videoRef.current) {
+                                            videoRef.current.playbackRate = speed;
+                                            setPlaybackRate(speed);
+                                        }
+                                    }}
+                                    style={{
+                                        border: 'none', background: playbackRate === speed ? theme.colors.primary : 'transparent',
+                                        color: 'white', borderRadius: '15px', padding: '2px 8px', fontSize: '10px', fontWeight: 700, cursor: 'pointer'
+                                    }}
+                                >
+                                    {speed}x
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    lesson.videoUrl ? (
+                        <div id="lesson-header-anchor" style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            overflow: 'hidden',
+                            backgroundColor: '#000'
+                        }}>
+                            {/* Container para escala dinÃ¢mica - controles ficaram maiores agora */}
+                            {(() => {
+                                const minHeight = 120;
+                                const maxHeight = 300;
+                                // Ajustado para controles maiores e escala interna alta para evitar empilhamento
+                                const minScale = 4.0;
+                                const maxScale = 2.2;
+
+                                const clampedHeight = Math.max(minHeight, Math.min(maxHeight, videoHeight));
+                                const ratio = (clampedHeight - minHeight) / (maxHeight - minHeight);
+                                const scaleFactor = minScale - (ratio * (minScale - maxScale));
+                                const scaleValue = 1 / scaleFactor;
+
+                                return (
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        width: `${scaleFactor * 100}%`,
+                                        height: `${scaleFactor * 100}%`,
+                                        transform: `translate(-50%, -50%) scale(${scaleValue})`,
+                                        transformOrigin: 'center center'
+                                    }}>
+                                        <iframe
+                                            src={convertToDirectLink(lesson.videoUrl)}
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                border: 'none'
+                                            }}
+                                            allow="autoplay; encrypted-media; fullscreen"
+                                            title={lesson.title}
+                                            allowFullScreen
+                                        />
+                                    </div>
+                                );
+                            })()}
+                        </div>
+                    ) : null
                 )
             )}
-        </div>
+        </div >
     );
 
     return (
@@ -761,9 +1221,11 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                     {lessonTitle}
                 </h2>
 
-                <button onClick={toggleWatched} style={{ background: 'none', border: 'none', color: isWatched ? theme.colors.success : 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>
-                    {isWatched ? <FaCheckCircle size={18} /> : <FaRegCircle size={18} />}
-                </button>
+                {!isLibrary && (
+                    <button onClick={toggleWatched} style={{ background: 'none', border: 'none', color: isWatched ? theme.colors.success : 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>
+                        {isWatched ? <FaCheckCircle size={18} /> : <FaRegCircle size={18} />}
+                    </button>
+                )}
             </div>
 
             {lesson.activity ? (
@@ -783,36 +1245,42 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                 /* VIDEO + NOTES LAYOUT */
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     {/* Sticky Video Here (If Enabled) */}
-                    {isSticky && (
+                    {isSticky && !isLibrary && (
                         <div style={{
                             width: '100%',
                             maxWidth: '900px',
                             margin: '0 auto',
                             background: 'black',
-                            position: 'relative',
-                            aspectRatio: '16/9',
-                            maxHeight: `${videoHeight}px`
+                            position: 'relative'
                         }}>
                             {MainContentArea}
-                            {/* Resize Handle */}
+                            {/* Novo Controlador de Redimensionamento: Aba Azul Pequena */}
                             <div
                                 onMouseDown={handleResizeStart}
                                 onTouchStart={handleResizeStart}
-                                onDoubleClick={() => {
-                                    const maxH = Math.min(400, window.innerWidth * 9 / 16);
-                                    setVideoHeight(maxH);
-                                    localStorage.setItem('video_height', String(maxH));
-                                }}
                                 style={{
-                                    position: 'absolute', bottom: 0, left: 0, right: 0,
-                                    height: '6px',
-                                    background: 'rgba(99, 102, 241, 0.6)',
+                                    position: 'absolute', bottom: -21, right: '21%',
+                                    width: '45px',
+                                    height: '20px',
                                     cursor: 'ns-resize',
                                     zIndex: 300,
-                                    touchAction: 'none'
+                                    touchAction: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: theme.colors.primary,
+                                    borderRadius: '0 0 8px 8px',
+                                    boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                                    border: `1px solid rgba(255,255,255,0.1)`,
+                                    borderTop: 'none'
                                 }}
                                 title="Arraste para redimensionar"
-                            />
+                            >
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'center' }}>
+                                    <div style={{ width: '15px', height: '2px', background: 'rgba(255,255,255,0.7)', borderRadius: '1px' }} />
+                                    <div style={{ width: '15px', height: '2px', background: 'rgba(255,255,255,0.7)', borderRadius: '1px' }} />
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -820,7 +1288,7 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                         <div style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
 
                             {/* Non-Sticky Video Here (If Disabled) */}
-                            {!isSticky && MainContentArea}
+                            {!isSticky && !isLibrary && MainContentArea}
 
                             {/* Nav & Action Buttons */}
                             <div style={{
@@ -828,7 +1296,20 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                                 padding: '0.3rem', background: theme.colors.surface, borderBottom: `1px solid ${theme.colors.border}`,
                                 position: 'relative', zIndex: 50
                             }}>
-                                <Button disabled={!prevLessonId} onClick={() => prevLessonId && navigate(`/course/${courseId}/lesson/${prevLessonId}`)} variant="secondary" style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}><FaStepBackward /> Ant</Button>
+                                <Button disabled={!prevLessonId} onClick={() => {
+                                    if (prevLessonId) {
+                                        // FORCE SAVE before navigating
+                                        if (editorRef.current) {
+                                            const currentContent = editorRef.current.innerHTML;
+                                            setTabs(prev => {
+                                                const newTabs = prev.map(t => t.id === activeTabId ? { ...t, content: currentContent } : t);
+                                                localStorage.setItem(TABS_KEY, JSON.stringify(newTabs));
+                                                return newTabs;
+                                            });
+                                        }
+                                        navigate(`/course/${courseId}/lesson/${prevLessonId}`);
+                                    }
+                                }} variant="secondary" style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}><FaStepBackward /> Ant</Button>
 
                                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                     {/* Sticky Toggle */}
@@ -860,8 +1341,135 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                                     </button>
                                 </div>
 
-                                <Button disabled={!nextLessonId} onClick={() => nextLessonId && navigate(`/course/${courseId}/lesson/${nextLessonId}`)} variant="primary" style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}>Prox <FaStepForward /></Button>
+                                <Button disabled={!nextLessonId} onClick={() => {
+                                    if (nextLessonId) {
+                                        // FORCE SAVE before navigating
+                                        if (editorRef.current) {
+                                            const currentContent = editorRef.current.innerHTML;
+                                            setTabs(prev => {
+                                                const newTabs = prev.map(t => t.id === activeTabId ? { ...t, content: currentContent } : t);
+                                                localStorage.setItem(TABS_KEY, JSON.stringify(newTabs));
+                                                return newTabs;
+                                            });
+                                        }
+                                        navigate(`/course/${courseId}/lesson/${nextLessonId}`);
+                                    }
+                                }} variant="primary" style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}>Prox <FaStepForward /></Button>
                             </div>
+
+                            {/* Lesson Materials Section */}
+                            {lesson.contents && lesson.contents.length > 0 && (
+                                <div style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.02)', borderBottom: `1px solid ${theme.colors.border}`, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <h4 style={{ margin: 0, fontSize: '0.75rem', color: theme.colors.text.secondary, fontWeight: 700, letterSpacing: '0.05rem', textTransform: 'uppercase' }}>Conteúdos Disponíveis</h4>
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: isLibrary ? 'column' : 'row',
+                                        flexWrap: 'wrap',
+                                        gap: '0.5rem'
+                                    }}>
+                                        {lesson.contents.map(content => {
+                                            const isLocal = !!localMaterialUrls[content.id];
+                                            const isDownloadingMat = !!downloadingMaterials[content.id];
+
+                                            return (
+                                                <div key={content.id} style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    background: 'rgba(255,255,255,0.03)',
+                                                    borderRadius: isLibrary ? '8px' : '6px',
+                                                    border: `1px solid ${isLocal ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)'}`,
+                                                    overflow: 'hidden'
+                                                }}>
+                                                    <button
+                                                        onClick={async () => {
+                                                            const isLocal = !!localMaterialUrls[content.id];
+                                                            const url = localMaterialUrls[content.id] || convertToDirectLink(content.url);
+                                                            const isDriveUrl = content.url.includes('drive.google.com');
+
+                                                            if ((content.type === 'epub' || content.type === 'pdf') && !isLocal && isDriveUrl) {
+                                                                try {
+                                                                    setIsPreparingId(content.id);
+                                                                    const downloadLink = convertToDownloadLink(content.url);
+                                                                    const response = await fetch(downloadLink);
+                                                                    if (!response.ok) throw new Error('Fetch direct failed');
+                                                                    const blob = await response.blob();
+                                                                    const blobUrl = URL.createObjectURL(blob);
+
+                                                                    // ForÃ§ar extensÃ£o no blob URL para o browser reconhecer
+                                                                    const finalUrl = content.type === 'epub' ? `${blobUrl}#.epub` : `${blobUrl}#.pdf`;
+                                                                    setViewingContent({ ...content, url: finalUrl });
+                                                                } catch (e) {
+                                                                    console.warn("Direct fetch fail, using proxy...");
+                                                                    try {
+                                                                        const downloadLink = convertToDownloadLink(content.url);
+                                                                        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(downloadLink)}`;
+                                                                        const response = await fetch(proxyUrl);
+                                                                        if (!response.ok) throw new Error('Proxy error');
+                                                                        const blob = await response.blob();
+                                                                        const blobUrl = URL.createObjectURL(blob);
+                                                                        const finalUrl = content.type === 'epub' ? `${blobUrl}#.epub` : `${blobUrl}#.pdf`;
+                                                                        setViewingContent({ ...content, url: finalUrl });
+                                                                    } catch (proxyError) {
+                                                                        console.error("All fetch methods failed:", proxyError);
+                                                                        setViewingContent({ ...content, url });
+                                                                    }
+                                                                } finally {
+                                                                    setIsPreparingId(null);
+                                                                }
+                                                            } else if (content.type === 'pdf' || content.type === 'epub' || content.type === 'mp3') {
+                                                                setViewingContent({ ...content, url });
+                                                            } else {
+                                                                window.open(url, '_blank');
+                                                            }
+                                                        }}
+                                                        disabled={isPreparingId === content.id}
+                                                        style={{
+                                                            background: 'none', border: 'none',
+                                                            padding: isLibrary ? '0.6rem 0.8rem' : '0.4rem 0.6rem',
+                                                            color: isLocal ? '#4ade80' : 'white',
+                                                            display: 'flex', alignItems: 'center',
+                                                            gap: isLibrary ? '0.8rem' : '0.5rem',
+                                                            cursor: 'pointer',
+                                                            fontSize: isLibrary ? '0.85rem' : '0.8rem',
+                                                            flex: isLibrary ? 1 : 'unset',
+                                                            textAlign: 'left',
+                                                            opacity: isPreparingId === content.id ? 0.6 : 1
+                                                        }}
+                                                    >
+                                                        <div style={{ width: isLibrary ? '28px' : '22px', height: isLibrary ? '28px' : '22px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                            {isPreparingId === content.id ? <FaSpinner className="spin" size={14} /> : (
+                                                                <>
+                                                                    {content.type === 'pdf' && <FaFilePdf color="#ff4444" size={14} />}
+                                                                    {content.type === 'epub' && <FaBookOpen color="#4ade80" size={14} />}
+                                                                    {content.type === 'mp3' && <FaPlay color="#60a5fa" size={14} />}
+                                                                    {content.type === 'link' && <FaLink color="#fbbf24" size={14} />}
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                            <span style={{ fontWeight: 600 }}>{content.title}</span>
+                                                        </div>
+                                                        {isLocal && <FaCheckCircle size={10} style={{ marginLeft: 'auto' }} color="#10b981" />}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => isLocal ? handleDeleteMaterial(content) : handleDownloadMaterial(content)}
+                                                        style={{
+                                                            padding: isLibrary ? '0.5rem 0.8rem' : '0.1rem 0.5rem',
+                                                            display: 'flex', alignItems: 'center',
+                                                            color: isLocal ? '#fca5a5' : theme.colors.text.secondary,
+                                                            background: 'none', border: 'none',
+                                                            borderLeft: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer'
+                                                        }}
+                                                        title={isLocal ? "Excluir Download" : "Baixar"}
+                                                    >
+                                                        {isDownloadingMat ? <FaSpinner className="spin" size={12} /> : (isLocal ? <FaTrash size={12} /> : <FaDownload size={12} />)}
+                                                    </button>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Notes Section Container */}
                             <div style={{ padding: '1rem', minHeight: '500px', position: 'relative' }}>
@@ -876,69 +1484,95 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                                     </div>
                                 )}
 
+                                {/* AI Correction Toast */}
+                                {showAiToast && (
+                                    <div style={{
+                                        position: 'absolute', top: '0', left: '50%', transform: 'translateX(-50%)', zIndex: 30,
+                                        background: 'rgba(99, 102, 241, 0.9)', color: 'white', padding: '0.3rem 1rem', borderRadius: '20px', fontSize: '0.85rem',
+                                        fontWeight: 600, boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                                        animation: 'fadeInOut 3s forwards'
+                                    }}>
+                                        ✨ Correção concluída!
+                                    </div>
+                                )}
+
                                 {/* Header: Title + Community Buttons */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                    <h3 style={{ margin: 0, fontSize: '1rem', color: theme.colors.text.primary }}>Minhas Anotações</h3>
-                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                        <button title="Salvar Online" onClick={handleShareNote} disabled={isSharing} style={{ background: 'rgba(59, 130, 246, 0.2)', border: 'none', borderRadius: '6px', color: '#60a5fa', padding: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <FaCloudUploadAlt size={16} />
-                                        </button>
-                                        <button title="Comunidade" onClick={handleOpenCommunity} style={{ background: theme.colors.surfaceHighlight, border: 'none', borderRadius: '6px', color: 'white', padding: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <FaUsers size={16} />
-                                        </button>
-                                        {/* Toolbar Sticky Toggle */}
-                                        <button
-                                            onClick={toggleToolbarSticky}
-                                            title="Fixar Controles"
-                                            style={{
-                                                background: isToolbarSticky ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)',
-                                                border: 'none', borderRadius: '6px',
-                                                color: isToolbarSticky ? theme.colors.primary : 'rgba(255,255,255,0.5)',
-                                                padding: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                            }}
-                                        >
-                                            {isToolbarSticky ? <FaToggleOn size={16} /> : <FaToggleOff size={16} />}
-                                        </button>
-                                    </div>
+                                    <h3 style={{ margin: 0, fontSize: '1rem', color: theme.colors.text.primary }}>
+                                        {isLibrary ? `Anotações do Módulo: ${currentModule?.title || ''}` : 'Minhas Anotações'}
+                                    </h3>
+                                    {!isLibrary && (
+                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <button title="Salvar Online" onClick={handleShareNote} disabled={isSharing} style={{ background: 'rgba(59, 130, 246, 0.2)', border: 'none', borderRadius: '6px', color: '#60a5fa', padding: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <FaCloudUploadAlt size={16} />
+                                            </button>
+                                            <button title="Comunidade" onClick={handleOpenCommunity} style={{ background: theme.colors.surfaceHighlight, border: 'none', borderRadius: '6px', color: 'white', padding: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <FaUsers size={16} />
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
-                                {/* Tabs Bar */}
-                                <div style={{ display: 'flex', overflowX: 'auto', gap: '0.3rem', paddingBottom: '2px', borderBottom: `1px solid ${theme.colors.border}` }}>
-                                    {tabs.map(tab => (
-                                        <div key={tab.id}
-                                            onClick={() => { setActiveTabId(tab.id); setShowCommunity(false); }}
-                                            style={{
-                                                padding: '0.4rem 0.8rem',
-                                                borderRadius: '8px 8px 0 0',
-                                                background: activeTabId === tab.id && !showCommunity ? theme.colors.surfaceHighlight : 'rgba(255,255,255,0.05)',
-                                                borderBottom: activeTabId === tab.id && !showCommunity ? `2px solid ${theme.colors.primary}` : 'none',
-                                                fontSize: '0.8rem',
-                                                cursor: 'pointer',
-                                                whiteSpace: 'nowrap',
-                                                display: 'flex', alignItems: 'center', gap: '0.3rem',
-                                                color: 'white',
-                                                opacity: activeTabId === tab.id && !showCommunity ? 1 : 0.6
-                                            }}
-                                        >
-                                            {tab.id !== 'main' && <FaStickyNote size={10} />}
-                                            {tab.title}
-                                            {tab.id !== 'main' && (
-                                                <span onClick={(e) => handleCloseTab(e, tab.id)} style={{ opacity: 0.5, marginLeft: '4px', fontSize: '10px' }}><FaTimes /></span>
-                                            )}
-                                        </div>
-                                    ))}
-                                    <button onClick={() => handleCreateTab()} style={{ background: 'none', border: 'none', color: theme.colors.primary, cursor: 'pointer', padding: '0.4rem' }}>
-                                        <FaPlus />
-                                    </button>
-                                </div>
+                                {/* Tabs Bar - Only for non-library lessons */}
+                                {!isLibrary && (
+                                    <div style={{ display: 'flex', overflowX: 'auto', gap: '0.3rem', paddingBottom: '2px', borderBottom: `1px solid ${theme.colors.border}` }}>
+                                        {tabs.map(tab => (
+                                            <div key={tab.id}
+                                                data-tab-id={tab.id}
+                                                onMouseDown={(e) => handleTabPressStart(e, tab.id)}
+                                                onMouseMove={handleTabPressMove}
+                                                onMouseUp={handleTabPressEnd}
+                                                onMouseLeave={handleTabPressEnd}
+                                                onTouchStart={(e) => handleTabPressStart(e, tab.id)}
+                                                onTouchMove={handleTabPressMove}
+                                                onTouchEnd={handleTabPressEnd}
+                                                onClick={() => handleTabClick(tab.id)}
+                                                style={{
+                                                    padding: '0.4rem 0.8rem',
+                                                    borderRadius: '8px 8px 0 0',
+                                                    background: activeTabId === tab.id && !showCommunity ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.03)',
+                                                    borderBottom: activeTabId === tab.id && !showCommunity ? `2px solid ${theme.colors.primary}` : '2px solid transparent',
+                                                    fontSize: '0.8rem',
+                                                    cursor: draggedTabId === tab.id ? 'grabbing' : 'grab',
+                                                    whiteSpace: 'nowrap',
+                                                    display: 'flex', alignItems: 'center', gap: '0.3rem',
+                                                    color: activeTabId === tab.id && !showCommunity ? theme.colors.primary : 'rgba(255,255,255,0.6)',
+                                                    transition: draggedTabId ? 'none' : 'all 0.2s ease',
+                                                    fontWeight: activeTabId === tab.id ? 600 : 400,
+                                                    opacity: draggedTabId === tab.id ? 0.5 : 1,
+                                                    transform: draggedTabId === tab.id ? `translateX(${dragCurrentX.current - dragStartPos.current.x}px)` : 'none',
+                                                    zIndex: draggedTabId === tab.id ? 100 : 1,
+                                                    position: 'relative',
+                                                    userSelect: 'none',
+                                                    touchAction: 'none'
+                                                }}
+                                            >
+                                                {tab.id !== 'main' && <FaStickyNote size={10} />}
+                                                {tab.title}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginLeft: '6px' }}>
+                                                    {tab.id !== tabs[0].id && (
+                                                        <span onClick={(e) => handleMakeMainTab(e, tab.id)} title="Tornar Principal" style={{ opacity: 0.5, fontSize: '10px' }}><FaArrowUp /></span>
+                                                    )}
+                                                    {tab.id !== 'main' && tabs.length > 1 && (
+                                                        <span onClick={(e) => handleCloseTab(e, tab.id)} style={{ opacity: 0.5, fontSize: '10px' }}><FaTimes /></span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                        <button onClick={() => handleCreateTab()} style={{ background: 'none', border: 'none', color: theme.colors.primary, cursor: 'pointer', padding: '0.4rem' }}>
+                                            <FaPlus />
+                                        </button>
+                                    </div>
+                                )}
 
                                 {/* Editor Area */}
                                 <div style={{
-                                    border: `1px solid ${theme.colors.border}`,
+                                    border: isLibrary ? 'none' : `1px solid ${theme.colors.border}`,
                                     borderTop: 'none',
-                                    borderRadius: '0 0 8px 8px',
-                                    background: 'rgba(0,0,0,0.2)',
-                                    minHeight: '400px',
+                                    borderRadius: isLibrary ? '0' : '0 0 8px 8px',
+                                    background: isLibrary ? 'transparent' : 'rgba(20, 20, 30, 0.4)',
+                                    backdropFilter: isLibrary ? 'none' : 'blur(5px)',
+                                    minHeight: isLibrary ? 'none' : '400px',
                                     position: 'relative'
                                 }}>
                                     {showCommunity ? (
@@ -955,85 +1589,239 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
                                             ) : (
                                                 <div style={{ display: 'grid', gap: '1rem' }}>
                                                     {publicNotes.map((note, idx) => (
-                                                        <div key={idx} style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px' }}>
+                                                        <div key={idx} style={{
+                                                            background: 'rgba(255,255,255,0.03)',
+                                                            padding: '1rem',
+                                                            borderRadius: '8px',
+                                                            border: `1px solid ${theme.colors.border}`,
+                                                            backdropFilter: 'blur(5px)'
+                                                        }}>
                                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                                                                 <strong style={{ color: theme.colors.secondary }}>{note.user}</strong>
                                                                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                                                                     <span style={{ fontSize: '0.7rem', opacity: 0.5 }}>{new Date(note.timestamp).toLocaleDateString()}</span>
-                                                                    {note.user === currentUser && (
-                                                                        <button onClick={handleDeletePublicNote} style={{ background: 'none', border: 'none', color: 'red', cursor: 'pointer' }}><FaTrash /></button>
+                                                                    <button
+                                                                        onClick={() => handleImportNote(note)}
+                                                                        title="Importar para minhas notas"
+                                                                        style={{
+                                                                            background: 'rgba(99, 102, 241, 0.2)',
+                                                                            border: 'none',
+                                                                            borderRadius: '4px',
+                                                                            color: theme.colors.primary,
+                                                                            padding: '0.2rem 0.5rem',
+                                                                            cursor: 'pointer',
+                                                                            fontSize: '0.7rem',
+                                                                            display: 'flex',
+                                                                            alignItems: 'center',
+                                                                            gap: '4px'
+                                                                        }}
+                                                                    >
+                                                                        <FaCopy size={10} /> Importar
+                                                                    </button>
+                                                                    {(note.user === currentUser || isAdmin) && (
+                                                                        <button onClick={() => handleDeletePublicNote(note.user)} style={{ background: 'none', border: 'none', color: 'red', cursor: 'pointer' }}><FaTrash size={12} /></button>
                                                                     )}
                                                                 </div>
                                                             </div>
                                                             <div style={{
-                                                                maxHeight: '100px', overflow: 'hidden', fontSize: '0.85rem', opacity: 0.8, marginBottom: '0.8rem',
-                                                                maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                                                                WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
+                                                                fontSize: '0.85rem', lineHeight: '1.4', opacity: 0.9, color: 'white'
                                                             }} dangerouslySetInnerHTML={{ __html: note.content }} />
-
-                                                            <Button onClick={() => handleImportNote(note)} variant="secondary" style={{ width: '100%', fontSize: '0.8rem', padding: '0.4rem' }}>
-                                                                <FaCopy /> Ler e Editar (Copiar)
-                                                            </Button>
                                                         </div>
                                                     ))}
                                                 </div>
                                             )}
                                         </div>
+                                    ) : isLibrary ? (
+                                        /* Unified Module Notes View for Library Lessons */
+                                        /* Unified Module Notes View (Revision Mode) */
+                                        <div style={{ padding: '0.4rem 0 1rem' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', paddingBottom: '2rem' }}>
+                                                {/* Module Revision List */}
+                                                {allModuleGroups.length > 0 ? allModuleGroups.map((group) => {
+                                                    const activeId = consolidationActiveTabs[group.lessonId] || group.tabs[0].id;
+                                                    const activeTab = group.tabs.find(t => t.id === activeId) || group.tabs[0];
+                                                    const isCurrentLessonCard = group.lessonId === lessonId;
+
+                                                    return (
+                                                        <div key={group.lessonId} style={{
+                                                            background: isCurrentLessonCard ? 'rgba(99, 102, 241, 0.12)' : 'rgba(255, 255, 255, 0.05)',
+                                                            borderRadius: '12px',
+                                                            border: isCurrentLessonCard ? `1px solid ${theme.colors.primary}60` : `1px solid rgba(255, 255, 255, 0.1)`,
+                                                            overflow: 'hidden',
+                                                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)'
+                                                        }}>
+                                                            <div style={{
+                                                                padding: '0.7rem 0.9rem',
+                                                                background: isCurrentLessonCard ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255, 255, 255, 0.02)',
+                                                                borderBottom: isCurrentLessonCard ? `1px solid ${theme.colors.primary}30` : '1px solid rgba(255, 255, 255, 0.05)',
+                                                                display: 'flex',
+                                                                justifyContent: 'space-between',
+                                                                alignItems: 'center',
+                                                                flexWrap: 'wrap',
+                                                                gap: '0.5rem'
+                                                            }}>
+                                                                <div
+                                                                    onClick={() => !isCurrentLessonCard && setPendingJumpLesson({ id: group.lessonId, title: group.lessonTitle })}
+                                                                    style={{
+                                                                        color: isCurrentLessonCard ? '#818cf8' : 'rgba(255, 255, 255, 0.6)',
+                                                                        fontSize: '0.7rem',
+                                                                        fontWeight: 800,
+                                                                        textTransform: 'uppercase',
+                                                                        letterSpacing: '0.5px',
+                                                                        cursor: isCurrentLessonCard ? 'default' : 'pointer',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        gap: '6px'
+                                                                    }}
+                                                                >
+                                                                    {group.lessonTitle} {isCurrentLessonCard && '(Atual)'}
+                                                                    {!isCurrentLessonCard && (
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.4, fontSize: '0.6rem' }}>
+                                                                            <FaStepForward size={8} /> Ir para aula
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+
+                                                                {group.tabs.length > 1 && (
+                                                                    <div style={{ display: 'flex', gap: '3px', background: 'rgba(0, 0, 0, 0.3)', padding: '2px', borderRadius: '6px' }}>
+                                                                        {group.tabs.map(tab => (
+                                                                            <button
+                                                                                key={tab.id}
+                                                                                onClick={() => setConsolidationActiveTabs(prev => ({ ...prev, [group.lessonId]: tab.id }))}
+                                                                                style={{
+                                                                                    padding: '3px 9px',
+                                                                                    fontSize: '0.65rem',
+                                                                                    borderRadius: '4px',
+                                                                                    border: 'none',
+                                                                                    cursor: 'pointer',
+                                                                                    background: activeId === tab.id ? (isCurrentLessonCard ? theme.colors.primary : 'rgba(255, 255, 255, 0.2)') : 'transparent',
+                                                                                    color: activeId === tab.id ? 'white' : 'rgba(255, 255, 255, 0.4)',
+                                                                                    fontWeight: 700,
+                                                                                    transition: 'all 0.2s'
+                                                                                }}
+                                                                            >
+                                                                                {tab.title}
+                                                                            </button>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+
+                                                            <div style={{ padding: '0.9rem 1.1rem' }}>
+                                                                <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '0.95rem', color: isCurrentLessonCard ? 'white' : 'rgba(255, 255, 255, 0.9)', fontWeight: 700 }}>
+                                                                    {activeTab.title}
+                                                                </h3>
+                                                                <div style={{
+                                                                    fontSize: '0.9rem',
+                                                                    lineHeight: '1.6',
+                                                                    color: isCurrentLessonCard ? 'white' : 'rgba(255, 255, 255, 0.85)',
+                                                                }} dangerouslySetInnerHTML={{ __html: activeTab.content }} />
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }) : (
+                                                    <p style={{ textAlign: 'center', opacity: 0.3, marginTop: '2rem', fontSize: '0.8rem' }}>Nenhuma outra anotação neste módulo.</p>
+                                                )}
+                                            </div>
+                                        </div>
                                     ) : (
                                         <>
-                                            {/* Toolbar - Conditional Sticky */}
+                                            {/* Toolbar - Sticky/Fixed at the Top */}
                                             <div style={{
                                                 display: 'flex', padding: '0.5rem',
-                                                background: '#1a1a2e',
+                                                background: 'rgba(30, 30, 40, 0.98)',
                                                 borderBottom: `1px solid ${theme.colors.border}`,
                                                 gap: '0.3rem', flexWrap: 'wrap',
-                                                position: isToolbarSticky ? 'sticky' : 'relative',
-                                                top: isToolbarSticky ? 0 : 'auto',
-                                                zIndex: isToolbarSticky ? 10 : 1,
-                                                borderRadius: '0 0 4px 4px'
+                                                position: isToolbarSticky ? 'fixed' : 'sticky',
+                                                top: 0,
+                                                left: isToolbarSticky ? 0 : 'auto',
+                                                right: isToolbarSticky ? 0 : 'auto',
+                                                zIndex: isToolbarSticky ? 9999999 : 100,
+                                                borderRadius: isToolbarSticky ? 0 : '0 0 4px 4px',
+                                                justifyContent: 'space-between',
+                                                backdropFilter: 'blur(15px)',
+                                                transition: 'all 0.3s ease'
                                             }}>
-                                                <ToolbarBtn onClick={() => execCmd('bold')} icon={<FaBold />} />
-                                                <ToolbarBtn onClick={() => execCmd('italic')} icon={<FaItalic />} />
-                                                <ToolbarBtn onClick={() => execCmd('underline')} icon={<FaUnderline />} />
-                                                <div style={{ width: 1, background: 'white', opacity: 0.2, margin: '0 4px' }} />
-                                                <ToolbarBtn onClick={() => execCmd('insertUnorderedList')} icon={<FaListUl />} />
-                                                <ToolbarBtn onClick={() => execCmd('removeFormat')} icon={<FaEraser />} />
-                                                <div style={{ flex: 1 }} />
-                                                {/* AI Button - Icon Only */}
-                                                <button
-                                                    onClick={handleMagicOrganize}
-                                                    disabled={isOrganizing}
-                                                    title={isOrganizing ? "Organizando..." : "Organizar com IA"}
-                                                    style={{
-                                                        background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
-                                                        border: 'none',
-                                                        borderRadius: '4px',
-                                                        padding: '0.4rem',
-                                                        color: 'white',
-                                                        cursor: isOrganizing ? 'wait' : 'pointer',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        opacity: isOrganizing ? 0.6 : 1
-                                                    }}
-                                                >
-                                                    <FaMagic size={14} />
-                                                </button>
+                                                <div style={{ display: 'flex', gap: '0.2rem', alignItems: 'center' }}>
+                                                    <ToolbarBtn onClick={() => execCmd('bold')} icon={<FaBold />} />
+                                                    <ToolbarBtn onClick={() => execCmd('italic')} icon={<FaItalic />} />
+                                                    <ToolbarBtn onClick={() => execCmd('underline')} icon={<FaUnderline />} />
+                                                    <div style={{ width: 1, height: '15px', background: 'white', opacity: 0.2, margin: '0 4px' }} />
+                                                    <ToolbarBtn onClick={() => execCmd('insertUnorderedList')} icon={<FaListUl />} />
+                                                    <ToolbarBtn onClick={() => execCmd('hiliteColor', 'rgba(255, 255, 0, 0.3)')} icon={<FaHighlighter />} />
+                                                    <ToolbarBtn onClick={() => execCmd('removeFormat')} icon={<FaEraser />} />
+                                                </div>
+
+                                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                                    {/* Toolbar Priority Toggle */}
+                                                    <button
+                                                        onClick={toggleToolbarSticky}
+                                                        title={isToolbarSticky ? "Modo Prioridade Ativado (Acima de Tudo)" : "Modo Prioridade Desativado"}
+                                                        style={{
+                                                            background: isToolbarSticky ? 'rgba(99, 102, 241, 0.25)' : 'rgba(255,255,255,0.05)',
+                                                            border: isToolbarSticky ? `1px solid ${theme.colors.primary}` : '1px solid transparent',
+                                                            borderRadius: '6px',
+                                                            color: isToolbarSticky ? theme.colors.primary : 'rgba(255,255,255,0.4)',
+                                                            padding: '0.35rem 0.6rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
+                                                            fontSize: '0.7rem', fontWeight: 600
+                                                        }}
+                                                    >
+                                                        {isToolbarSticky ? <FaToggleOn size={14} /> : <FaToggleOff size={14} />}
+                                                        {window.innerWidth > 480 && (isToolbarSticky ? 'SOBREPOSIÇÃO ON' : 'SOBREPOSIÇÃO OFF')}
+                                                    </button>
+
+                                                    <div style={{ width: 1, height: '15px', background: 'white', opacity: 0.1 }} />
+
+                                                    {/* AI Button */}
+                                                    <button
+                                                        onClick={handleMagicOrganize}
+                                                        disabled={isOrganizing}
+                                                        title={isOrganizing ? "Organizando..." : "Organizar com IA"}
+                                                        style={{
+                                                            background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
+                                                            border: 'none',
+                                                            borderRadius: '6px',
+                                                            padding: '0.4rem 0.8rem',
+                                                            color: 'white',
+                                                            cursor: isOrganizing ? 'wait' : 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            opacity: isOrganizing ? 0.6 : 1,
+                                                            boxShadow: '0 2px 10px rgba(99, 102, 241, 0.3)'
+                                                        }}
+                                                    >
+                                                        <FaMagic size={14} />
+                                                    </button>
+                                                </div>
                                             </div>
 
                                             {/* Editor */}
                                             <div
-                                                ref={editorRef}
-                                                contentEditable
-                                                onInput={(e) => saveCurrentTab(e.currentTarget.innerHTML)}
-                                                style={{
-                                                    padding: '1rem', minHeight: '400px', outline: 'none', lineHeight: '1.6', fontSize: '0.95rem'
-                                                }}
-                                            />
+                                                onClick={() => editorRef.current?.focus()}
+                                                style={{ padding: '1.2rem', minHeight: '450px', cursor: 'text', position: 'relative' }}
+                                            >
+                                                {/* Spacer for Fixed Toolbar on Mobile */}
+                                                {isToolbarSticky && <div style={{ height: '40px' }} />}
+
+                                                <div
+                                                    ref={editorRef}
+                                                    contentEditable={true}
+                                                    suppressContentEditableWarning={true}
+                                                    onInput={(e) => saveCurrentTab(e.currentTarget.innerHTML)}
+                                                    style={{
+                                                        minHeight: '400px', outline: 'none', lineHeight: '1.6', fontSize: '0.95rem',
+                                                        color: 'rgba(255,255,255,0.9)',
+                                                        width: '100%',
+                                                        WebkitUserSelect: 'text',
+                                                        userSelect: 'text'
+                                                    }}
+                                                />
+                                            </div>
 
                                             {/* Saving Indicator */}
-                                            <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: '0.7rem', opacity: 0.5 }}>
-                                                {isSaving ? 'Salvando...' : 'Salvo'}
+                                            <div style={{ position: 'absolute', bottom: 12, right: 12, fontSize: '0.7rem', opacity: 0.4 }}>
+                                                {isSaving ? 'Salvando alterações...' : 'Alterações salvas'}
                                             </div>
                                         </>
                                     )}
@@ -1045,17 +1833,327 @@ const LessonView: React.FC<LessonViewProps> = ({ courses }) => {
             )}
 
             <style>{`
+                .force-landscape-rotate {
+                    width: 100vh !important;
+                    height: 100vw !important;
+                    transform: translate(-50%, -50%) rotate(90deg) !important;
+                    position: fixed !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform-origin: center !important;
+                    object-fit: contain !important;
+                    background: black !important;
+                    z-index: 999999 !important;
+                    aspect-ratio: auto !important;
+                    margin: 0 !important;
+                    display: block !important;
+                }
+                
+                .force-landscape-rotate iframe, .force-landscape-rotate video {
+                    width: 100% !important;
+                    height: 100% !important;
+                    object-fit: contain !important;
+                }
+
                 .spin { animation: spin 1s linear infinite; }
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            `}</style>
+            {/* Content Viewing Modal (PDF / EPUB / MP3) */}
+            {viewingContent && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'rgba(0,0,0,0.95)', zIndex: 10000, display: 'flex', flexDirection: 'column'
+                }}>
+                    <div style={{ padding: '0.8rem 1.2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1a1a1a', borderBottom: '1px solid #333' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                            {viewingContent.type === 'pdf' && <FaFilePdf color="#ff4444" />}
+                            {viewingContent.type === 'epub' && <FaBookOpen color="#4ade80" />}
+                            {viewingContent.type === 'mp3' && <FaMusic color="#60a5fa" />}
+                            <h3 style={{ margin: 0, color: 'white', fontSize: '1rem', fontWeight: 600 }}>{viewingContent.title}</h3>
+                        </div>
+                        <button onClick={() => setViewingContent(null)} style={{ background: 'rgba(255,255,255,0.05)', border: 'none', color: 'white', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', display: 'flex' }}><FaTimes size={18} /></button>
+                    </div>
+                    <div style={{ flex: 1, overflow: 'hidden', background: '#121212', position: 'relative' }}>
+                        {(() => {
+                            const isLocal = viewingContent.url.startsWith('blob:') || viewingContent.url.startsWith('http://localhost') || viewingContent.url.startsWith('cdvfile:');
+                            const isDriveUrl = viewingContent.url.includes('drive.google.com');
+
+                            if (viewingContent.type === 'pdf') {
+                                // On web, use iframe for Drive PDFs to avoid CORS. In native or for local files, use the PDF viewer.
+                                if (isDriveUrl && !isLocal && !isPlatformNative()) {
+                                    return (
+                                        <iframe
+                                            src={convertToDirectLink(viewingContent.url)}
+                                            style={{ width: '100%', height: '100%', border: 'none' }}
+                                            title={viewingContent.title}
+                                        />
+                                    );
+                                }
+                                return (
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                        <Viewer
+                                            fileUrl={viewingContent.url}
+                                            plugins={[defaultLayoutPluginInstance]}
+                                            theme="dark"
+                                        />
+                                    </Worker>
+                                );
+                            }
+
+                            if (viewingContent.type === 'epub') {
+                                return (
+                                    <ReactReader
+                                        url={viewingContent.url}
+                                        location={epubLocation}
+                                        locationChanged={(loc: string | number) => setEpubLocation(loc)}
+                                        swipeable={true}
+                                        epubInitOptions={{
+                                            openAs: 'epub'
+                                        }}
+                                        epubOptions={{
+                                            allowPopups: true,
+                                            allowScriptedContent: true
+                                        }}
+                                    />
+                                );
+                            }
+
+                            if (viewingContent.type === 'mp3') {
+                                return (
+                                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2rem', padding: '2rem' }}>
+                                        <div style={{
+                                            width: '120px', height: '120px', borderRadius: '50%',
+                                            background: 'rgba(99, 102, 241, 0.1)', display: 'flex',
+                                            alignItems: 'center', justifyContent: 'center'
+                                        }}>
+                                            <FaMusic size={50} color={theme.colors.primary} />
+                                        </div>
+                                        <audio controls autoPlay src={viewingContent.url} style={{ width: '100%', maxWidth: '400px' }} />
+                                        <div style={{ textAlign: 'center' }}>
+                                            <p style={{ color: 'white', margin: '0 0 0.5rem 0', fontWeight: 500 }}>{viewingContent.title}</p>
+                                            <p style={{ color: theme.colors.text.secondary, margin: 0, fontSize: '0.85rem' }}>Reproduzindo material de áudio</p>
+                                        </div>
+                                    </div>
+                                );
+                            }
+
+                            return <div style={{ color: 'white', padding: '2rem', textAlign: 'center' }}>Formato não suportado para visualização direta.</div>;
+                        })()}
+                    </div>
+                </div>
+            )}
+
+            {/* Rename Tab Modal - VIP Style */}
+            {renamingTab && (
+                <div
+                    onClick={() => setRenamingTab(null)}
+                    style={{
+                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                        backgroundColor: 'rgba(0,0,0,0.85)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        zIndex: 9999, backdropFilter: 'blur(8px)',
+                        padding: '1rem'
+                    }}
+                >
+                    <div
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                            background: theme.colors.surface,
+                            border: `1px solid ${theme.colors.border}`,
+                            borderRadius: theme.borderRadius.lg,
+                            padding: '1.5rem',
+                            width: '100%',
+                            maxWidth: '400px',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+                            animation: 'slideUp 0.3s ease-out'
+                        }}
+                    >
+                        <h2 style={{
+                            margin: 0,
+                            marginBottom: '0.5rem',
+                            fontSize: '1.25rem',
+                            color: theme.colors.text.primary,
+                            fontWeight: 600
+                        }}>
+                            Renomear Aba
+                        </h2>
+
+                        <p style={{
+                            margin: '0 0 1rem 0',
+                            color: theme.colors.text.secondary,
+                            fontSize: '0.9rem',
+                            lineHeight: '1.5'
+                        }}>
+                            Digite o novo nome para identificar esta anotação.
+                        </p>
+
+                        <form onSubmit={(e) => { e.preventDefault(); confirmRename(); }}>
+                            <input
+                                autoFocus
+                                value={renameValue}
+                                onChange={(e) => setRenameValue(e.target.value)}
+                                placeholder="Novo nome da aba..."
+                                style={{
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    background: 'rgba(255,255,255,0.05)',
+                                    border: `1px solid ${theme.colors.border}`,
+                                    borderRadius: theme.borderRadius.md,
+                                    color: 'white',
+                                    fontSize: '1rem',
+                                    outline: 'none',
+                                    marginBottom: '1rem',
+                                    boxSizing: 'border-box'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = theme.colors.primary}
+                                onBlur={(e) => e.target.style.borderColor = theme.colors.border}
+                            />
+
+                            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setRenamingTab(null)}
+                                    style={{
+                                        padding: '0.6rem 1.2rem',
+                                        borderRadius: theme.borderRadius.md,
+                                        border: 'none',
+                                        background: 'rgba(255,255,255,0.05)',
+                                        color: theme.colors.text.secondary,
+                                        cursor: 'pointer',
+                                        fontSize: '0.9rem',
+                                        fontWeight: 500,
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={!renameValue.trim()}
+                                    style={{
+                                        padding: '0.6rem 1.5rem',
+                                        borderRadius: theme.borderRadius.md,
+                                        border: 'none',
+                                        background: renameValue.trim() ? theme.colors.primary : 'rgba(99, 102, 241, 0.3)',
+                                        color: 'white',
+                                        cursor: renameValue.trim() ? 'pointer' : 'not-allowed',
+                                        fontSize: '0.9rem',
+                                        fontWeight: 600,
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    Salvar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            {/* Jump Confirmation Modal - VIP/Admin Style */}
+            {pendingJumpLesson && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.85)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    zIndex: 9999, padding: '1rem'
+                }} onClick={() => setPendingJumpLesson(null)}>
+                    <div
+                        onClick={e => e.stopPropagation()}
+                        style={{
+                            background: theme.colors.surface,
+                            borderRadius: theme.borderRadius.lg,
+                            padding: '1.5rem',
+                            maxWidth: '400px',
+                            width: '100%',
+                            border: `1px solid ${theme.colors.border}`,
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+                            animation: 'modalFadeIn 0.3s ease-out'
+                        }}
+                    >
+                        <h2 style={{
+                            margin: 0,
+                            marginBottom: '0.5rem',
+                            fontSize: '1.25rem',
+                            color: theme.colors.text.primary,
+                            fontWeight: 600
+                        }}>
+                            Ir para esta aula?
+                        </h2>
+
+                        <p style={{
+                            margin: '0 0 1.5rem 0',
+                            color: theme.colors.text.secondary,
+                            fontSize: '0.9rem',
+                            lineHeight: '1.5'
+                        }}>
+                            Você está prestes a sair desta página para assistir à aula:<br />
+                            <strong style={{ color: 'white', display: 'block', marginTop: '0.5rem' }}>
+                                {pendingJumpLesson.title}
+                            </strong>
+                        </p>
+
+                        <div style={{
+                            display: 'flex',
+                            gap: '0.75rem',
+                            justifyContent: 'flex-end'
+                        }}>
+                            <button
+                                onClick={() => setPendingJumpLesson(null)}
+                                style={{
+                                    padding: '0.6rem 1.2rem',
+                                    borderRadius: theme.borderRadius.md,
+                                    border: 'none',
+                                    background: 'rgba(255,255,255,0.05)',
+                                    color: theme.colors.text.secondary,
+                                    cursor: 'pointer',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 500,
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={() => {
+                                    // FORCE SAVE before navigating to prevent data loss
+                                    if (editorRef.current) {
+                                        const currentContent = editorRef.current.innerHTML;
+                                        setTabs(prev => {
+                                            const newTabs = prev.map(t => t.id === activeTabId ? { ...t, content: currentContent } : t);
+                                            localStorage.setItem(TABS_KEY, JSON.stringify(newTabs));
+                                            return newTabs;
+                                        });
+                                    }
+                                    navigate(`/course/${courseId}/lesson/${pendingJumpLesson.id}`);
+                                    setPendingJumpLesson(null);
+                                }}
+                                style={{
+                                    padding: '0.6rem 1.5rem',
+                                    borderRadius: theme.borderRadius.md,
+                                    border: 'none',
+                                    background: theme.colors.primary,
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 600,
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                Sim, vamos!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <style>{`
+                @keyframes modalFadeIn {
+                    from { transform: scale(0.9); opacity: 0; }
+                    to { transform: scale(1); opacity: 1; }
+                }
             `}</style>
         </div>
     );
 };
-
-const ToolbarBtn: React.FC<{ onClick: () => void, icon: React.ReactNode }> = ({ onClick, icon }) => (
-    <button onMouseDown={(e) => { e.preventDefault(); onClick(); }} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.7)', cursor: 'pointer', padding: '0.3rem', borderRadius: '4px' }}>
-        {icon}
-    </button>
-);
 
 export default LessonView;

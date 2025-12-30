@@ -9,11 +9,19 @@ export interface Activity {
     questions: Question[];
 }
 
+export interface LessonContent {
+    id: string;
+    type: 'pdf' | 'epub' | 'mp3' | 'link';
+    title: string;
+    url: string;
+}
+
 export interface Lesson {
     id: string;
     title: string;
     videoUrl?: string;
     activity?: Activity;
+    contents?: LessonContent[];
     description?: string;
 }
 
@@ -29,4 +37,6 @@ export interface Course {
     imageUrl: string;
     isVip?: boolean;
     modules: Module[];
+    examEnabled?: boolean;
+    examPool?: Question[];
 }

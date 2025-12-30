@@ -15,6 +15,7 @@ const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ style, .
                 fontFamily: theme.typography.fontFamily,
                 outline: 'none',
                 transition: 'border-color 0.2s ease',
+                boxSizing: 'border-box',
                 ...style
             }}
             onFocus={(e) => e.currentTarget.style.borderColor = theme.colors.primary}

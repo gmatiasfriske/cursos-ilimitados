@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Course } from '../types';
 import { theme } from '../theme';
 import Card from '../components/UI/Card';
-import { FaPlay, FaCrown, FaLock, FaUnlock } from 'react-icons/fa';
+import { FaPlay, FaCrown, FaLock, FaUnlock, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { convertToImageLink } from '../services/driveUtils';
 import PasswordModal from '../components/UI/PasswordModal';
 
@@ -28,6 +28,43 @@ const Home: React.FC<HomeProps> = ({ courses, onRefresh }) => {
     // VIP Mode State
     const [isVipMode, setIsVipMode] = useState(() => localStorage.getItem('is_vip_mode') === 'true');
     const [showVipModal, setShowVipModal] = useState(false);
+
+    // Favorites State
+    const [favorites, setFavorites] = useState<string[]>(() => {
+        const saved = localStorage.getItem('favorite_courses');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    const toggleFavorite = (e: React.MouseEvent, courseId: string) => {
+        e.stopPropagation();
+        setFavorites(prev => {
+            const isFav = prev.includes(courseId);
+            const newFavs = isFav ? prev.filter(id => id !== courseId) : [...prev, courseId];
+            localStorage.setItem('favorite_courses', JSON.stringify(newFavs));
+            triggerToast(isFav ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
+            return newFavs;
+        });
+    };
+
+    const getCourseProgress = (course: Course) => {
+        const watchedList = JSON.parse(localStorage.getItem('watched_lessons') || '[]');
+        let totalLessons = 0;
+        let watchedCount = 0;
+
+        course.modules.forEach(m => {
+            if (m.lessons) {
+                m.lessons.forEach(l => {
+                    totalLessons++;
+                    if (watchedList.includes(String(l.id))) {
+                        watchedCount++;
+                    }
+                });
+            }
+        });
+
+        if (totalLessons === 0) return 0;
+        return Math.round((watchedCount / totalLessons) * 100);
+    };
 
     const toggleVipMode = () => {
         if (isVipMode) {
@@ -112,6 +149,14 @@ const Home: React.FC<HomeProps> = ({ courses, onRefresh }) => {
     };
 
     const displayedCourses = courses.filter(c => isVipMode || !c.isVip);
+
+    const sortedCourses = [...displayedCourses].sort((a, b) => {
+        const isAFav = favorites.includes(a.id);
+        const isBFav = favorites.includes(b.id);
+        if (isAFav && !isBFav) return -1;
+        if (!isAFav && isBFav) return 1;
+        return 0;
+    });
 
     return (
         <>
@@ -294,102 +339,150 @@ const Home: React.FC<HomeProps> = ({ courses, onRefresh }) => {
                         gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
                         gap: '1rem',
                     }}>
-                        {displayedCourses.map(course => (
-                            <Card
-                                key={course.id}
-                                onClick={() => navigate(`/course/${course.id}`)}
-                                style={{
-                                    padding: 0,
-                                    overflow: 'hidden',
-                                    cursor: 'pointer',
-                                    transition: 'transform 0.2s',
-                                    border: course.isVip ? '1px solid #fbbf24' : undefined,
-                                    boxShadow: course.isVip ? '0 0 10px rgba(251, 191, 36, 0.1)' : undefined
-                                }}
-                                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
-                                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                            >
-                                {/* Image Container */}
-                                <div style={{
-                                    width: '100%',
-                                    aspectRatio: '1/1',
-                                    position: 'relative',
-                                    backgroundColor: theme.colors.surfaceHighlight
-                                }}>
-                                    {course.imageUrl ? (
-                                        <img
-                                            src={convertToImageLink(course.imageUrl)}
-                                            alt={course.title}
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                objectFit: 'cover'
-                                            }}
-                                        />
-                                    ) : (
-                                        <div style={{
-                                            width: '100%', height: '100%',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            color: theme.colors.text.secondary
-                                        }}>
-                                            Sem Arte
-                                        </div>
-                                    )}
+                        {sortedCourses.map(course => {
+                            const isFav = favorites.includes(course.id);
+                            const progress = getCourseProgress(course);
 
-                                    {/* Overlay Play Icon */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: 0, left: 0, right: 0, bottom: 0,
-                                        background: 'rgba(0,0,0,0.3)',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        opacity: 0,
-                                        transition: 'opacity 0.2s'
+                            return (
+                                <Card
+                                    key={course.id}
+                                    className="course-card"
+                                    onClick={() => navigate(`/course/${course.id}`)}
+                                    style={{
+                                        padding: 0,
+                                        overflow: 'hidden',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        border: isFav ? `1px solid ${theme.colors.primary}` : (course.isVip ? '1px solid #fbbf24' : `1px solid ${theme.colors.border}`),
+                                        boxShadow: isFav ? theme.shadows.glow : (course.isVip ? '0 0 10px rgba(251, 191, 36, 0.1)' : theme.shadows.sm),
+                                        position: 'relative'
                                     }}
-                                        onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
-                                        onMouseOut={(e) => e.currentTarget.style.opacity = '0'}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-6px)';
+                                        e.currentTarget.style.borderColor = theme.colors.primary;
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                        e.currentTarget.style.borderColor = isFav ? theme.colors.primary : (course.isVip ? '#fbbf24' : theme.colors.border);
+                                    }}
+                                >
+                                    {/* Favorite Button */}
+                                    <button
+                                        onClick={(e) => toggleFavorite(e, course.id)}
+                                        style={{
+                                            position: 'absolute', top: '8px', left: '8px', zIndex: 10,
+                                            background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)',
+                                            border: 'none', borderRadius: '50%', width: '32px', height: '32px',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            cursor: 'pointer', color: isFav ? theme.colors.secondary : 'white',
+                                            transition: 'all 0.2s ease'
+                                        }}
                                     >
+                                        {isFav ? <FaHeart size={16} /> : <FaRegHeart size={16} />}
+                                    </button>
+
+                                    {/* Image Container */}
+                                    <div style={{
+                                        width: '100%',
+                                        aspectRatio: '1/1',
+                                        position: 'relative',
+                                        backgroundColor: theme.colors.surfaceHighlight,
+                                        overflow: 'hidden'
+                                    }}>
+                                        {course.imageUrl ? (
+                                            <img
+                                                src={convertToImageLink(course.imageUrl)}
+                                                alt={course.title}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover',
+                                                    transition: 'transform 0.5s ease'
+                                                }}
+                                            />
+                                        ) : (
+                                            <div style={{
+                                                width: '100%', height: '100%',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                color: theme.colors.text.secondary
+                                            }}>
+                                                Sem Arte
+                                            </div>
+                                        )}
+
+                                        {/* Overlay Play Icon */}
                                         <div style={{
-                                            background: 'rgba(255,255,255,0.2)',
-                                            backdropFilter: 'blur(4px)',
-                                            borderRadius: '50%',
-                                            width: '50px', height: '50px',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                        }}>
-                                            <FaPlay color="white" />
+                                            position: 'absolute',
+                                            top: 0, left: 0, right: 0, bottom: 0,
+                                            background: 'rgba(0,0,0,0.3)',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            opacity: 0,
+                                            transition: 'opacity 0.2s',
+                                            pointerEvents: 'none' // Allow click to pass through to Card
+                                        }}
+                                            className="play-overlay"
+                                        >
+                                            <div style={{
+                                                background: 'rgba(255,255,255,0.2)',
+                                                backdropFilter: 'blur(4px)',
+                                                borderRadius: '50%',
+                                                width: '50px', height: '50px',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                            }}>
+                                                <FaPlay color="white" />
+                                            </div>
                                         </div>
+
+                                        {/* VIP Badge on Card */}
+                                        {course.isVip && (
+                                            <div style={{
+                                                position: 'absolute', top: 5, right: 5,
+                                                background: '#fbbf24', color: 'black',
+                                                padding: '2px 6px', borderRadius: '4px',
+                                                fontSize: '0.6rem', fontWeight: 'bold', zIndex: 10
+                                            }}>
+                                                VIP
+                                            </div>
+                                        )}
+
                                     </div>
 
-                                    {/* VIP Badge on Card */}
-                                    {course.isVip && (
-                                        <div style={{
-                                            position: 'absolute', top: 5, right: 5,
-                                            background: '#fbbf24', color: 'black',
-                                            padding: '2px 6px', borderRadius: '4px',
-                                            fontSize: '0.6rem', fontWeight: 'bold'
+                                    <div style={{ padding: '0.8rem' }}>
+                                        <h3 style={{
+                                            margin: '0 0 0.4rem 0',
+                                            fontSize: '0.95rem',
+                                            fontWeight: 600,
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
                                         }}>
-                                            VIP
+                                            {course.title}
+                                        </h3>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                            <span style={{ fontSize: '0.75rem', color: theme.colors.text.secondary }}>
+                                                {course.modules.length} Módulos
+                                            </span>
+                                            <span style={{ fontSize: '0.75rem', color: progress === 100 ? theme.colors.success : theme.colors.text.primary, fontWeight: 700 }}>
+                                                {progress}%
+                                            </span>
                                         </div>
-                                    )}
 
-                                </div>
-
-                                <div style={{ padding: '1rem' }}>
-                                    <h3 style={{
-                                        margin: 0,
-                                        fontSize: theme.typography.sizes.body,
-                                        fontWeight: 600,
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }}>
-                                        {course.title}
-                                    </h3>
-                                    <span style={{ fontSize: theme.typography.sizes.small, color: theme.colors.text.secondary }}>
-                                        {course.modules.length} Módulos
-                                    </span>
-                                </div>
-                            </Card>
-                        ))}
+                                        {/* Progress Bar */}
+                                        <div style={{
+                                            width: '100%', height: '4px',
+                                            backgroundColor: 'rgba(255,255,255,0.1)',
+                                            borderRadius: '2px', overflow: 'hidden'
+                                        }}>
+                                            <div style={{
+                                                width: `${progress}%`, height: '100%',
+                                                background: progress === 100 ? theme.colors.success : theme.colors.primary,
+                                                transition: 'width 0.5s ease-out'
+                                            }} />
+                                        </div>
+                                    </div>
+                                </Card>
+                            );
+                        })}
                     </div>
 
                     {displayedCourses.length === 0 && (
@@ -402,6 +495,20 @@ const Home: React.FC<HomeProps> = ({ courses, onRefresh }) => {
                     )}
                 </div>
             </div>
+            <style>{`
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translate(-50%, 20px); }
+                    15% { opacity: 1; transform: translate(-50%, 0); }
+                    85% { opacity: 1; transform: translate(-50%, 0); }
+                    100% { opacity: 0; transform: translate(-50%, -20px); }
+                }
+                .course-card:hover .play-overlay {
+                    opacity: 1 !important;
+                }
+                .course-card:hover img {
+                    transform: scale(1.1);
+                }
+            `}</style>
         </>
     );
 };

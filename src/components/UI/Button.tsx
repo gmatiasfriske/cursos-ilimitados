@@ -36,6 +36,7 @@ const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', fullWidt
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
+                boxSizing: 'border-box',
                 ...style
             }}
             onMouseOver={(e) => {

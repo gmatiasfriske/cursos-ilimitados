@@ -12,6 +12,7 @@ const Card: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, style,
                 boxShadow: theme.shadows.sm,
                 padding: '1.5rem',
                 color: theme.colors.text.primary,
+                boxSizing: 'border-box',
                 ...style
             }}
             {...props}
